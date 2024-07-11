@@ -45,12 +45,7 @@ const Register = () => {
 
     try{
       
-      await makeRequest.post("/user", input,
-          {
-              headers: { 'Content-Type': 'application/json' },
-              withCredentials: true
-          }
-      );
+      await makeRequest.post("/user", input);
       setErr("Register berhasil silahkan login !!")
       await timeout(1500);
       navigate("/login");

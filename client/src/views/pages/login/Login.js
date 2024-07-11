@@ -40,6 +40,7 @@ const Login = () => {
     try {
       // console.log(inputs);
       await login(inputs);
+      // const { currentUser } = useContext(AuthContext);
       // const {currentUser} =useContext(AuthContext);
       // console.log("success");
       navigate("/")

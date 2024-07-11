@@ -5,3 +5,11 @@ export const makeRequest = axios.create({
   baseURL: server,
   withCredentials: true,
 });
+
+export const makeRequestUpload = axios.create({
+  baseURL: server,
+  withCredentials: true,
+  headers : {
+    "Content-Type" : "multipart/form-data"
+  }
+});

@@ -4,6 +4,8 @@ const { v4: uuidv4 } = require("uuid");
 const multer = require("multer");
 const fs = require('fs');
 const User = require("../model/usermodel.js");
+const dotenv = require("dotenv");
+dotenv.config().parsed;
 
 // const date = Date.format(Date('YYYYMMDDHHmmss'))
 
@@ -19,7 +21,7 @@ const storage = multer.diskStorage({
 const uploadFile = multer({
     storage: storage,
     limits: {
-        fieldSize: '2000000' // 2mb
+        fieldSize: '20000000' // 20mb
     },
     fileFilter: (req, file, cb) => {
         const fileTypes = /pdf/
@@ -68,13 +70,15 @@ const updateMateri = async (req, res) => {
     
     try {
         const { name, about} = req.body;
-        if (!req.file) return res.status(500).json({ msg: "upload gagal" });
         const materi = await Materi.findOne({
             where: {
                 uuid: req.params.id
             }
         });
         if (!materi) return res.status(404).json({ msg: "Materi tidak ditemukan" });
+        console.log("asdadassssssssssssssssssssssssssssssssssssssssssssssssss "+name, about);
+        if (!req.file) return res.status(500).json({ msg: "upload gagal" });
+        let filename = ( req.file && req.file) ? req.file.filename :materi.file
         const user = await User.findOne({
             where: {
                 id: req.user.id
@@ -85,7 +89,7 @@ const updateMateri = async (req, res) => {
             await Materi.update({
                 name: name,
                 about: about,
-                file: 'storage/files/'+req.file.filename
+                file: 'storage/files/'+filename
             }, {
                 where: {
                     id: materi.id
@@ -141,6 +145,17 @@ const deleteMateri = async (req, res) => {
     }
 }
 
+const getPDF = async (req, res) => {
+    try{
+        const pdf = req.body.file
+        const filepath = path.join(__dirname, '../', pdf)
+        // const filepath = path.join(process.env.APP_ADDRESS , pdf)
+        // console.log(filepath);
+        return res.status(200).sendFile(filepath)
+    }catch(error){
+        return res.status(500).json({ msg: error.message });
+    }
+}
 const getMateri = async (req, res) => {
     try {
         const page = parseInt(req.query.page)-1 || 0;
@@ -164,6 +179,9 @@ const getMateri = async (req, res) => {
         
         const totalPage = Math.ceil(count / limit);
         // console.log(response.length);
+        response.map(function(res){
+            res = process.env.APP_ADDRESS + "/" + res.file
+        })
         return response.length > 0 
         ? res.status(200).json({pages: page+1, offset: offset, limit: limit, total : response.length, total_pages : totalPage, data : response}) 
         : res.status(404).json("Materi telah dihapus atau belum dibuat!");
@@ -202,5 +220,6 @@ module.exports = {
     updateMateri,
     deleteMateri,
     getMateri,
-    getMateriById
+    getMateriById,
+    getPDF
 }

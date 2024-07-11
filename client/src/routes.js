@@ -21,6 +21,8 @@ const Tabs = React.lazy(() => import('./views/base/tabs/Tabs'))
 const Tables = React.lazy(() => import('./views/base/tables/Tables'))
 const Tooltips = React.lazy(() => import('./views/base/tooltips/Tooltips'))
 const Materi = React.lazy(() => import('./views/base/materi/Materi'))
+const EditMateri = React.lazy(() => import('./views/base/materi/EditMateri'))
+const DetailMateri = React.lazy(() => import('./views/base/materi/DetailMateri'))
 
 // Buttons
 const Buttons = React.lazy(() => import('./views/buttons/buttons/Buttons'))
@@ -57,6 +59,8 @@ const routes = [
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
   { path: '/murid', name: 'Murid', element: Colors, exact: true },
   { path: '/murid/materi', name: 'Materi', element: Materi },
+  { path: '/murid/materi/:id/detail', name: 'Materi', element: DetailMateri },
+  { path: '/materi/:id/edit', name: 'Materi', element: EditMateri },
   { path: '/theme/colors', name: 'Colors', element: Colors },
   { path: '/theme/typography', name: 'Typography', element: Typography },
   { path: '/base', name: 'Base', element: Cards, exact: true },

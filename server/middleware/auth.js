@@ -27,7 +27,6 @@ const auth = async (req, res, next) => {
         // }
         
         const token = req.cookies.accessToken;
-        // console.log("55555555555555555555555555"+token);
         
         const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
         // console.log(decoded.id)
@@ -69,9 +68,9 @@ const verifyEmailUser = async(req,res,next) => {
 }
 
 const adminOnly = async(req,res,next) => {
-
     if(req.user.role !== '0105') return res.status(403).json({msg:"akses dilarang!!"});
     next();
 }
+
 
 module.exports = {auth,verifyEmailUser,adminOnly}

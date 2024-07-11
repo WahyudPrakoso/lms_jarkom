@@ -1,5 +1,7 @@
-import { makeRequest } from "../axios";
+import axios from "axios";
+import { makeRequest, makeRequestUpload } from "../axios";
 
+const server = import.meta.env.VITE_SERVER_ADDRESS;
 //// TANPA AXIOS
 // const server = import.meta.env.VITE_SERVER_ADDRESS;
 // export async function getMateri() {
@@ -29,12 +31,20 @@ export async function getMateri(id) {
     return (await makeRequest.get(`/materi/${id}`)).data
 }
 
+export async function getPDF(pdf) {
+    return (await makeRequest.post(`/pdf/`, pdf, {responseType: 'blob'})).data
+}
+
 export async function createMateri(newData) {
     return (await makeRequest.post('/materi', newData)).data
 }
 
-export async function editMateri(id, newData) {
-    return (await makeRequest.patch(`/materi/${id}`, newData)).data
+export async function editMateri(newData) {
+    const formData = new FormData();
+    formData.append("file", newData.updatedFile);
+    formData.append("name", newData.name);
+    formData.append("about", newData.about);
+    return (await makeRequestUpload.patch(`/materi/${newData.id}`,formData)).data
 }
 
 export async function delMateri(id) {
