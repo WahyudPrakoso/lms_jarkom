@@ -11,20 +11,8 @@ import {
   CCardBody,
   CCardHeader,
   CCol,
-  CContainer,
-  CDropdown,
-  CDropdownItem,
-  CDropdownMenu,
-  CDropdownToggle,
-  CFormInput,
   CFormSelect,
-  CHeader,
-  CHeaderNav,
-  CHeaderToggler,
-  CNavItem,
-  CNavLink,
   CRow,
-  useColorModes,
 } from '@coreui/react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useMateriById, usePdf } from '../../../hooks/queries';
@@ -48,7 +36,7 @@ const resizeObserverOptions = {}
 const maxWidth = 2000
 const DetailMateri = (e) => {
     const [numPages, setNumPages] = useState(0); 
-    const [scale, setScale ] = useState(0.5)
+    const [scale, setScale ] = useState(0.75)
     const [isAllPages, setIsAllPages ] = useState(false)
     const [pageNumber, setPageNumber] = useState(0); 
     const [containerRef, setContainerRef] = useState(null)
@@ -146,7 +134,7 @@ const DetailMateri = (e) => {
                     <td align='left'>
                       <CFormSelect size="sm" className="" aria-label="Small select example" style={{width:"5rem"}} onChange={handleScale}>
                         <option value="0.5">100%</option>
-                        <option value="0.75">150%</option>
+                        <option value="0.75" selected>150%</option>
                         <option value="1.00">200%</option>
                         {/* <option value="1.25">125%</option>
                         <option value="1.50">150%</option>
@@ -155,27 +143,25 @@ const DetailMateri = (e) => {
                     </td>
                      <td align='center'>
                       <CButtonGroup role='group' aria-label="Basic example">
-                        <CButton color='danger' size='sm' className='' style={{color: 'white'}} onClick={changeSingle} disabled={(isAllPages)?false:true}>
+                        <CButton color='danger' size='sm' className='button' style={{color: 'white'}} onClick={changeSingle} disabled={(isAllPages)?false:true}>
                           Single Page
                         </CButton>
-                        <CButton color='danger' size='sm' className='' style={{color: 'white'}} onClick={changeAll} disabled={(isAllPages)?true:false}>
+                        <CButton color='danger' size='sm' className='button' style={{color: 'white'}} onClick={changeAll} disabled={(isAllPages)?true:false}>
                           All Pages
                         </CButton>
                       </CButtonGroup>
                     </td>
-                    <div style={{display:(isAllPages)?'none':'block'}}>
-                    <td align='center'>
-                      <CButton onClick={goToPrevPage} size='sm' className="previous" color='primary'>
+                    <td align='center' style={{display:(isAllPages)?'none':'block'}}>
+                      <CButton onClick={goToPrevPage} size='sm' className="previous button" color='primary'>
                         <CIcon icon={cilChevronLeft} size='sm'/>
                       </CButton>
                         {pageNumber} / {numPages}
-                      <CButton onClick={goToNextPage} size='sm' className="next" color='primary'>
+                      <CButton onClick={goToNextPage} size='sm' className="next button" color='primary'>
                         <CIcon icon={cilChevronRight} size='sm'/>
                       </CButton>
                     </td>
-                    </div>
                     <td align='right'>
-                      <CButton color='danger' size='sm' className='' style={{color: 'white'}} onClick={loadPdf}>
+                      <CButton color='danger' size='sm' className='button' style={{color: 'white'}} onClick={loadPdf}>
                         Reload PDF <CIcon icon={cilFile} size="lg"/>
                       </CButton>
                     </td>

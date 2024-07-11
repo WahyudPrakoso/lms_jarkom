@@ -91,16 +91,8 @@ body {
   background-color: #212631;
 }
 
-button {
-  background-color: #f5f5f5;
-  border: none;
-  color: #000;
-  padding: 1rem;
-  list-style: none;
-  font-size: 1.3rem;
+.button {
   margin: 0.7rem;
-  border-radius: 20%;
-  cursor: pointer;
 }
 
 .previous {

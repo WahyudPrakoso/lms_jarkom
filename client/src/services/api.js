@@ -21,9 +21,9 @@ const server = import.meta.env.VITE_SERVER_ADDRESS;
 export async function getAllMateri() {
     return (await makeRequest.get(`/materi/`)).data
 }
-export const getMateriPages = async (pageParam = 1) => {
-    // console.log("page " +pageParam);
-    const response = await makeRequest.get(`/materi?page=${pageParam}`)
+export const getMateriPages = async (limit=5,pageParam = 1,filter='') => {
+    // console.log("api ==========> page " +pageParam+" limit : "+limit+" filter : "+filter);
+    const response = await makeRequest.get(`/materi?page=${pageParam}&limit=${limit}&filter=${filter}`)
     return response.data
 }
 
@@ -36,7 +36,12 @@ export async function getPDF(pdf) {
 }
 
 export async function createMateri(newData) {
-    return (await makeRequest.post('/materi', newData)).data
+    console.log(newData);
+    const formData = new FormData();
+    formData.append("file", newData.file);
+    formData.append("name", newData.name);
+    formData.append("about", newData.about);
+    return (await makeRequest.post('/materi', formData)).data
 }
 
 export async function editMateri(newData) {

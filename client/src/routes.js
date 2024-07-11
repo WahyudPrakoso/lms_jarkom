@@ -20,8 +20,10 @@ const Spinners = React.lazy(() => import('./views/base/spinners/Spinners'))
 const Tabs = React.lazy(() => import('./views/base/tabs/Tabs'))
 const Tables = React.lazy(() => import('./views/base/tables/Tables'))
 const Tooltips = React.lazy(() => import('./views/base/tooltips/Tooltips'))
-const Materi = React.lazy(() => import('./views/base/materi/Materi'))
-const EditMateri = React.lazy(() => import('./views/base/materi/EditMateri'))
+const GuruMateri = React.lazy(() => import('./views/base/materi/guru/Materi'))
+const MuridMateri = React.lazy(() => import('./views/base/materi/murid/Materi'))
+const EditMateri = React.lazy(() => import('./views/base/materi/guru/EditMateri'))
+const AddMateri = React.lazy(() => import('./views/base/materi/guru/AddMateri'))
 const DetailMateri = React.lazy(() => import('./views/base/materi/DetailMateri'))
 
 // Buttons
@@ -57,10 +59,13 @@ const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
-  { path: '/murid', name: 'Murid', element: Colors, exact: true },
-  { path: '/murid/materi', name: 'Materi', element: Materi },
-  { path: '/murid/materi/:id/detail', name: 'Materi', element: DetailMateri },
-  { path: '/materi/:id/edit', name: 'Materi', element: EditMateri },
+  { path: '/murid', name: 'Murid', element: Dashboard, exact: true },
+  { path: '/murid/materi', name: 'Materi', element: MuridMateri },
+  { path: '/guru', name: 'Guru', element: Dashboard, exact: true },
+  { path: '/guru/materi', name: 'Materi', element: GuruMateri },
+  { path: '/materi/:id/detail', name: 'Detail Materi', element: DetailMateri },
+  { path: '/guru/:id/edit', name: 'Edit Materi', element: EditMateri },
+  { path: '/guru/add', name: 'Tambah Materi', element: AddMateri },
   { path: '/theme/colors', name: 'Colors', element: Colors },
   { path: '/theme/typography', name: 'Typography', element: Typography },
   { path: '/base', name: 'Base', element: Cards, exact: true },

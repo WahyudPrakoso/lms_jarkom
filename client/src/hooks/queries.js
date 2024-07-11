@@ -8,10 +8,11 @@ export function fetchMateri() {
   });
 }
 
-export function useMateriPages(page) {
+export function useMateriPages(limit,page,filter) {
+  // console.log("hook =========> page " +page+" limit : "+limit+" filter : "+filter);
   return useQuery({
-    queryKey: ['materi', {page}],
-    queryFn: () => getMateriPages(page),
+    queryKey: ['materi', {limit,page,filter}],
+    queryFn: () => getMateriPages(limit,page,filter),
     placeholderData: keepPreviousData,
   });
 }

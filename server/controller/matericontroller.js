@@ -5,6 +5,7 @@ const multer = require("multer");
 const fs = require('fs');
 const User = require("../model/usermodel.js");
 const dotenv = require("dotenv");
+const { Op } = require("sequelize");
 dotenv.config().parsed;
 
 // const date = Date.format(Date('YYYYMMDDHHmmss'))
@@ -160,9 +161,16 @@ const getMateri = async (req, res) => {
     try {
         const page = parseInt(req.query.page)-1 || 0;
         const limit = parseInt(req.query.limit) || 5;
+        const filter = req.query.filter || "";
         const offset = limit * page;
         let response = await Materi.findAll({
             attributes: ['uuid', 'name', 'about', 'file'],
+            where: {
+                name: {
+                    [Op.like]: '%' + filter + '%'
+                }
+                
+            },
             order: [
                 ['createdAt', 'DESC']
             ],
@@ -175,7 +183,14 @@ const getMateri = async (req, res) => {
             offset: offset,
             limit: limit,
         });
-        let count = await Materi.count();
+        let count = await Materi.count({
+            where: {
+                name: {
+                    [Op.like]: '%' + filter + '%'
+                }
+                
+            }
+        });
         
         const totalPage = Math.ceil(count / limit);
         // console.log(response.length);

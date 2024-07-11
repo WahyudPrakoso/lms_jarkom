@@ -1,9 +1,9 @@
 import { CButton, CForm, CFormInput, CFormLabel, CFormTextarea } from '@coreui/react'
 import { useState } from 'react'
-const EditMateriForm = ({onsubmit, initialValue})=>{
+const AddMateriForm = ({onsubmit, initialValue})=>{
     const [materi, setMateri] = useState({
-        name: initialValue?.name || '',
-        about: initialValue?.about || ''
+        name: '',
+        about: ''
     })
     const [file, setFile] = useState(null)
     const handleChangeInput = (evt) => {
@@ -12,18 +12,6 @@ const EditMateriForm = ({onsubmit, initialValue})=>{
           [evt.target.name]: evt.target.value,
         })
     }
-
-    const upload = async (file) => {
-        console.log(file)
-        try {
-          const formData = new FormData();
-          formData.append("file", file);
-          const res = await makeRequest.post("/upload", formData);
-          return res.data;
-        } catch (err) {
-          console.log(err);
-        }
-      };
 
     const createTextInputElement = (elementName) => (
         <div className="mb-3">
@@ -68,7 +56,7 @@ const EditMateriForm = ({onsubmit, initialValue})=>{
         setFile(null)
     }
     return(
-        <CForm encType='multipart/form-data' id='formEditMateri'>
+        <CForm encType='multipart/form-data' id='formAddMateri'>
 
             {createTextInputElement('name')}
             {createTextareaInputElement('about')}
@@ -84,4 +72,4 @@ const EditMateriForm = ({onsubmit, initialValue})=>{
     )
 }
 
-export default EditMateriForm
+export default AddMateriForm

@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from 'react'
+import ResponsivePagination from 'react-responsive-pagination'
 import {
   CButton,
   CCard,
   CCardBody,
   CCardHeader,
   CCol,
+  CFormInput,
+  CFormSelect,
+  CInputGroup,
+  CInputGroupText,
   CPagination,
   CPaginationItem,
   CRow,
@@ -17,20 +22,38 @@ import {
   CTableRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilPencil, cilTrash, cilStorage } from '@coreui/icons'
-import {makeRequest} from '../../../axios'
+import { cilPencil, cilTrash, cilStorage, cilZoom, cilReload, cilPlus } from '@coreui/icons'
 import { Link, useNavigate } from 'react-router-dom'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { fetchMateri, useMateriPages } from '../../../hooks/queries'
-import { useDeleteMateri } from '../../../hooks/mutation'
-import ResponsivePagination from 'react-responsive-pagination'
+import { fetchMateri, useMateriPages } from '../../../../hooks/queries'
+import { useDeleteMateri } from '../../../../hooks/mutation'
 
 const Materi = () => {
-    const [err, setErr] = useState(null);
+    const [filter, setFilter] = useState();
     const [page, setPage] = useState(1);
-    let lastNum = 0
+    const [limit, setLimit] = useState(5);
+    const [fieldFilter, setFieldFilter] = useState('');
     const navigate = useNavigate()
-    const { isPending, isError, data: materi, error, isFetching, isPlaceholderData } = useMateriPages(page)
+    
+    const handleFilterField = (e) => {
+      setFieldFilter(e.target.value)
+    }
+    const handleLimit = (e) => {
+      setLimit(e.target.value)
+    }
+
+    const handleFilter = (filter) => {
+      // console.log("materi ========> page " +page+" limit : "+limit+" filter : "+filter);
+      setFilter(filter);
+    }
+    const { isPending, isError, data: materi, error, isFetching, isPlaceholderData } = useMateriPages(limit,page,filter)
+    // useEffect(()=>{
+    //   setDataMateri(materi);
+    //   setPending(isPending);
+    //   setIsErr(isError);
+    //   setErrMsg(error);
+    //   setFetching(isFetching);
+    // }, [])
+
     // const {isLoading, error, data} = useQuery(['materi'], ()=>
     //     makeRequest.get("/materi").then((res) => {
     //         return res.data
@@ -43,21 +66,51 @@ const Materi = () => {
 
     const handleDelete = (id) => deleteSongMutation.mutate(id)
     const handleEdit = (id) => navigate(`/materi/${id}/edit`)
-    const handleDetail = (id) => navigate(`/murid/materi/${id}/detail`)
-
+    const handleDetail = (id) => navigate(`/materi/${id}/detail`)
+    const handleAdd = () => navigate(`/guru/add`)
+    
     //for pagination
-    const handlePage = (num) => setPage(num)
-    const pagesNum = []
-    for (let i = 0; i < materi?.total_pages; i++) {
-      pagesNum.push(<CPaginationItem onClick={() => handlePage(i+1)} key={i}>{i+1}</CPaginationItem>);
-  }
+    // const handlePage = (num) => setPage(num)
+    
+    // const pagesNum = []
+    // for (let i = 0; i < materi?.total_pages; i++) {
+    //   pagesNum.push(<CPaginationItem onClick={() => handlePage(i+1)} key={i}>{i+1}</CPaginationItem>);
+    // }
     // console.log(materi);
   return (
     <CRow>
       <CCol xs={12}>
         <CCard className="mb-4">
           <CCardHeader>
-            <strong>Daftar materi</strong>
+            <div style={{display:'flex'}} className='mt-2'>
+              <h3>Daftar materi</h3>
+              <div style={{marginLeft:'auto'}}>
+                <CInputGroup className="mb-3" >
+                  <CFormSelect onChange={handleLimit} size='sm'>
+                    <option disabled>Item/Page</option>
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                  </CFormSelect>
+                  <CInputGroupText id="basic-addon1" style={{backgroundColor:'#249542'}}>
+                    <CButton className='p-0' onClick={handleAdd}>
+                      Tambah Data <CIcon icon={cilPlus} size='lg'></CIcon>
+                    </CButton>
+                  </CInputGroupText>
+                  <CFormInput aria-label="Username" type='text' name='search' placeholder='Cari : judul' onChange={handleFilterField}/>
+                  <CInputGroupText id="basic-addon2">
+                    <CButton className='p-0' onClick={() => {handleFilter(fieldFilter,page,limit)}}>
+                      <CIcon icon={cilZoom}></CIcon>
+                    </CButton>
+                  </CInputGroupText>
+                  <CInputGroupText id="basic-addon3">
+                    <CButton className='p-0' onClick={() => {handleFilter("",page,limit)}}>
+                      <CIcon icon={cilReload}></CIcon>
+                    </CButton>
+                  </CInputGroupText>
+                </CInputGroup>
+              </div>
+            </div>
           </CCardHeader>
           <CCardBody>
             
@@ -101,12 +154,12 @@ const Materi = () => {
                     ))}
                 </CTableBody>
               </CTable>
-              <CPagination align="end" style={{marginRight:"40px",marginTop:"2ren"}}>
-              <ResponsivePagination
-                total={materi?.total_pages}
-                current={page}
-                onPageChange={(page) => setPage(page)}
-              />
+                <CPagination align="end" style={{marginRight:"40px",marginTop:"2ren",marginLeft:'auto'}}>
+                <ResponsivePagination
+                  total={materi?.total_pages}
+                  current={page}
+                  onPageChange={(page) => setPage(page)}
+                />
               </CPagination>
               {/* <CPagination align="center" aria-label="Page navigation example">
                 
