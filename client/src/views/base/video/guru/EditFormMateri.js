@@ -1,11 +1,11 @@
 import { CButton, CForm, CFormInput, CFormLabel, CFormTextarea } from '@coreui/react'
 import { useState } from 'react'
-const AddMateriForm = ({onsubmit, initialValue})=>{
+const EditVideoForm = ({onsubmit, initialValue})=>{
     const [materi, setMateri] = useState({
-        name: '',
-        about: ''
+        name: initialValue?.name || '',
+        about: initialValue?.about || '',
+        link: initialValue?.link || ''
     })
-    const [file, setFile] = useState(null)
     const handleChangeInput = (evt) => {
         setMateri({
           ...materi,
@@ -20,7 +20,20 @@ const AddMateriForm = ({onsubmit, initialValue})=>{
                 type="text"
                 id="judul"
                 name={elementName.toLowerCase()}
-                placeholder="ex : Materi Pengenalan Jarkom"
+                placeholder="ex : Video Pengenalan Jarkom"
+                onChange={handleChangeInput} required
+                value = {materi[elementName.toLowerCase()]} 
+            />
+        </div>
+    )
+    const createLinkInputElement = (elementName) => (
+        <div className="mb-3">
+            <CFormLabel htmlFor="link">Link Embed Video</CFormLabel>
+            <CFormInput
+                type="text"
+                id="link"
+                name={elementName.toLowerCase()}
+                placeholder="ex : https://www.youtube.com/embed/###"
                 onChange={handleChangeInput} required
                 value = {materi[elementName.toLowerCase()]} 
             />
@@ -33,7 +46,7 @@ const AddMateriForm = ({onsubmit, initialValue})=>{
                 id="keterangan" 
                 name={elementName.toLowerCase()}
                 rows={3}
-                placeholder='Jelaskan secara garis besar apa yang dapat murid ketahui dari belajar materi ini'
+                placeholder='Jelaskan secara garis besar apa yang dapat murid ketahui dari belajar video ini'
                 onChange={handleChangeInput}
                 value = {materi[elementName.toLowerCase()]} 
             >
@@ -42,34 +55,25 @@ const AddMateriForm = ({onsubmit, initialValue})=>{
     )
     const handleSubmit = (evt) => {
         evt.preventDefault()
-    
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("name", materi.name);
-        formData.append("about", materi.about);
-        onsubmit(materi, file)
-    
+        onsubmit(materi)
+        
         setMateri({
           name: '',
           about: '',
+          link:''
         })
-        setFile(null)
     }
     return(
-        <CForm encType='multipart/form-data' id='formAddMateri'>
+        <CForm encType='multipart/form-data' id='formEditMateri'>
 
             {createTextInputElement('name')}
             {createTextareaInputElement('about')}
-            
-            <div className="mb-3">
-                <CFormLabel htmlFor="formFile">File Materi Baru</CFormLabel>
-                <CFormInput type="file" id="formFile" name='file' onChange={(e)=> setFile(e.target.files[0])}/>
-            </div>
+            {createLinkInputElement('link')}
             <div className="d-grid">
-                <CButton color="primary" onClick={handleSubmit}>Edit Materi</CButton>
+                <CButton color="primary" onClick={handleSubmit}>Edit Materi Video</CButton>
             </div>
         </CForm>
     )
 }
 
-export default AddMateriForm
+export default EditVideoForm

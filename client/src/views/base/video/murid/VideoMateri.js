@@ -24,10 +24,10 @@ import {
 import CIcon from '@coreui/icons-react'
 import { cilPencil, cilTrash, cilStorage, cilZoom, cilReload, cilPlus } from '@coreui/icons'
 import { Link, useNavigate } from 'react-router-dom'
-import { fetchMateri, useMateriPages } from '../../../../hooks/queries'
+import { fetchMateri, useMateriPages, useVideoPages } from '../../../../hooks/queries'
 import { useDeleteMateri } from '../../../../hooks/mutation'
 
-const Materi = () => {
+const VidMateri = () => {
     const [filter, setFilter] = useState();
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(5);
@@ -45,38 +45,11 @@ const Materi = () => {
       // console.log("materi ========> page " +page+" limit : "+limit+" filter : "+filter);
       setFilter(filter);
     }
-    const { isPending, isError, data: materi, error, isFetching, isPlaceholderData } = useMateriPages(limit,page,filter)
-    // useEffect(()=>{
-    //   setDataMateri(materi);
-    //   setPending(isPending);
-    //   setIsErr(isError);
-    //   setErrMsg(error);
-    //   setFetching(isFetching);
-    // }, [])
-
-    // const {isLoading, error, data} = useQuery(['materi'], ()=>
-    //     makeRequest.get("/materi").then((res) => {
-    //         return res.data
-    //     })
-    // )
-    // console.log(totalPages);
-    const deleteSongMutation = useDeleteMateri()
+    const { isPending, isError, data: materi, error, isFetching, isPlaceholderData } = useVideoPages(limit,page,filter)
 
     if (isError) return `Error: ${error.message}`
 
-    const handleDelete = (id) => deleteSongMutation.mutate(id)
-    const handleEdit = (id) => navigate(`/guru/materi/${id}/edit`)
-    const handleDetail = (id) => navigate(`/materi/${id}/detail`)
-    const handleAdd = () => navigate(`/guru/add/materi`)
-    
-    //for pagination
-    // const handlePage = (num) => setPage(num)
-    
-    // const pagesNum = []
-    // for (let i = 0; i < materi?.total_pages; i++) {
-    //   pagesNum.push(<CPaginationItem onClick={() => handlePage(i+1)} key={i}>{i+1}</CPaginationItem>);
-    // }
-    // console.log(materi);
+    const handleDetail = (id) => navigate(`/video/${id}/detail`)
   return (
     <CRow>
       <CCol xs={12}>
@@ -92,11 +65,6 @@ const Materi = () => {
                     <option value="10">10</option>
                     <option value="20">20</option>
                   </CFormSelect>
-                  <CInputGroupText id="basic-addon1" style={{backgroundColor:'#249542'}}>
-                    <CButton className='p-0' onClick={handleAdd} style={{color:'white'}}>
-                      Tambah Data <CIcon icon={cilPlus} size='lg'></CIcon>
-                    </CButton>
-                  </CInputGroupText>
                   <CFormInput aria-label="Username" type='text' name='search' placeholder='Cari : judul' onChange={handleFilterField}/>
                   <CInputGroupText id="basic-addon2">
                     <CButton className='p-0' onClick={() => {handleFilter(fieldFilter,page,limit)}}>
@@ -143,12 +111,6 @@ const Materi = () => {
                                 <CButton color="primary" className="mb-1 mt-1 px-3 mx-1" onClick={() => handleDetail(materiContent.uuid)}>
                                     <CIcon icon={cilStorage} />
                                 </CButton>
-                                <CButton color="warning" className="mb-1 mt-1 px-3 mx-1" onClick={() => handleEdit(materiContent.uuid)}>
-                                    <CIcon icon={cilPencil} />
-                                </CButton>
-                                <CButton color="danger" className="mb-1 mt-1 px-3 mx-1" onClick={()=>handleDelete(materiContent.uuid)}>
-                                    <CIcon icon={cilTrash} />
-                                </CButton>
                             </CTableDataCell>
                         </CTableRow>
                     ))}
@@ -161,27 +123,6 @@ const Materi = () => {
                   onPageChange={(page) => setPage(page)}
                 />
               </CPagination>
-              {/* <CPagination align="center" aria-label="Page navigation example">
-                
-              
-                <CPaginationItem onClick={() => setPage((old) => Math.max(old - 1, 0))} 
-                disabled={page === 1}>
-                  Previous
-                </CPaginationItem>
-
-                {pagesNum}
-                
-                <CPaginationItem onClick={() => {
-                  if (!isPlaceholderData) {
-                    setPage((old) => old + 1)
-                  }
-                }}
-                // {...console.log(materi.total_pages)}
-                // Disable the Next Page button until we know a next page is available
-                disabled={isPlaceholderData || page === materi?.total_pages}>
-                  Next
-                </CPaginationItem>
-              </CPagination> */}
             </>       
           )}
           {isFetching ? <span> Loading...</span> : null}{' '}
@@ -192,4 +133,4 @@ const Materi = () => {
   )
 }
 
-export default Materi
+export default VidMateri

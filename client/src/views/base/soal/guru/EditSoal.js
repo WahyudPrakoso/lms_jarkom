@@ -8,44 +8,37 @@ import {
 } from '@coreui/react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useMateriById } from '../../../../hooks/queries'
-import { editMateri } from '../../../../services/api'
-import EditMateriForm from './EditFormMateri'
+import { useSoalById } from '../../../../hooks/queries'
+import { editSoal } from '../../../../services/api'
+import EditSoalForm from './EditFormSoal'
 
-const EditMateri = () => {
+const EditSoal = () => {
     const [err, setErr] = useState(null);
     
     const navigate = useNavigate()
-    // const [input, setInputs] = useState({
-    //     name : "",
-    //     about : ""
-    // });
-    // const handleChange = (e) => {
-    //     setInputs((prev) => ({...prev, [e.target.name] : e.target.value}));
-    //   };
     const queryClient = useQueryClient()
 
     const { id } = useParams()
-    const { isPending, isError, data: materi, error, isFetching, isPlaceholderData } = useMateriById(id)
-    const updateMateriMutation = useMutation({
-        mutationFn: editMateri,
+    const { isPending, isError, data: materi, error, isFetching, isPlaceholderData } = useSoalById(id)
+    const updateSoalMutation = useMutation({
+        mutationFn: editSoal,
         onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: ['materi'] })
-          navigate('/guru/materi')
+          queryClient.invalidateQueries({ queryKey: ['soal'] })
+          navigate('/guru/soal')
         },
         onError:(err) => {
             console.log(err.response.data.msg)
         }
     })
-    const handleSubmit = async (updatedMateri, updatedFile) => {
-        updateMateriMutation.mutate({ id, ...updatedMateri, updatedFile})
+    const handleSubmit = async (updatedSoal, updatedFile) => {
+        updateSoalMutation.mutate({ id, ...updatedSoal, updatedFile})
     };
   return (
     <CRow>
       <CCol xs={12}>
         <CCard className="mb-4">
           <CCardHeader>
-            <strong>Edit materi</strong>
+            <strong>Edit Soal</strong>
           </CCardHeader>
           <CCardBody>
             
@@ -53,7 +46,7 @@ const EditMateri = () => {
             ) : isError ? (
               <div>Error: {error.message}</div>
             ) : (
-              <EditMateriForm onsubmit={handleSubmit} initialValue={materi} />     
+              <EditSoalForm onsubmit={handleSubmit} initialValue={materi} />     
           )}
           {isFetching ? <span> Loading...</span> : null}{' '}
           </CCardBody>
@@ -63,4 +56,4 @@ const EditMateri = () => {
   )
 }
 
-export default EditMateri
+export default EditSoal

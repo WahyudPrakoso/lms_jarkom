@@ -5,6 +5,7 @@ const multer = require("multer");
 const fs = require('fs');
 const User = require("../model/usermodel.js");
 const moment = require("moment-timezone");
+const { Op } = require("sequelize");
 // const tz = require("moment-timezone");
 
 // const date = Date.format(Date('YYYYMMDDHHmmss'))
@@ -58,7 +59,7 @@ const createSoal = async (req, res) => {
             userId: user.id,
             name: name,
             about: about,
-            deadline : dl,
+            deadline : new Date(dl),
             file: 'storage/files/'+req.file.filename
         });
         return res.status(201).json({ msg: "Soal berhasil dibuat!" });
@@ -150,8 +151,18 @@ const deleteSoal = async (req, res) => {
 
 const getSoal = async (req, res) => {
     try {
+        const page = parseInt(req.query.page)-1 || 0;
+        const limit = parseInt(req.query.limit) || 5;
+        const filter = req.query.filter || "";
+        const offset = limit * page;
         let response = await Soal.findAll({
-            attributes: ['uuid', 'name', 'about','deadline', 'file'],
+            attributes: ['uuid', 'name', 'about', 'deadline','file'],
+            where: {
+                name: {
+                    [Op.like]: '%' + filter + '%'
+                }
+                
+            },
             order: [
                 ['createdAt', 'DESC']
             ],
@@ -160,11 +171,27 @@ const getSoal = async (req, res) => {
                     model : User,
                     attributes : ['name']
                 }
-            ]
+            ],
+            offset: offset,
+            limit: limit,
         });
-        return response.length > 0
-        ? res.status(200).json(response) 
-        :res.status(404).json("Soal telah dihapus atau belum dibuat!");
+        let count = await Soal.count({
+            where: {
+                name: {
+                    [Op.like]: '%' + filter + '%'
+                }
+                
+            }
+        });
+        
+        const totalPage = Math.ceil(count / limit);
+        // console.log(response.length);
+        response.map(function(res){
+            res = process.env.APP_ADDRESS + "/" + res.file
+        })
+        return response.length > 0 
+        ? res.status(200).json({pages: page+1, offset: offset, limit: limit, total : response.length, total_pages : totalPage, data : response}) 
+        : res.status(404).json("Materi telah dihapus atau belum dibuat!");
         
     } catch (error) {
         return res.status(500).json({ msg: error.message });

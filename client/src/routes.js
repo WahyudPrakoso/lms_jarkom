@@ -25,6 +25,16 @@ const MuridMateri = React.lazy(() => import('./views/base/materi/murid/Materi'))
 const EditMateri = React.lazy(() => import('./views/base/materi/guru/EditMateri'))
 const AddMateri = React.lazy(() => import('./views/base/materi/guru/AddMateri'))
 const DetailMateri = React.lazy(() => import('./views/base/materi/DetailMateri'))
+const DetailVideo = React.lazy(() => import('./views/base/video/DetailVideo'))
+const GuruVideo = React.lazy(() => import('./views/base/video/guru/VideoMateri'))
+const AddVideo = React.lazy(() => import('./views/base/video/guru/AddMateri'))
+const EditVideo = React.lazy(() => import('./views/base/video/guru/EditMateri'))
+const MuridVideo = React.lazy(() => import('./views/base/video/murid/VideoMateri'))
+const DetailSoal = React.lazy(() => import('./views/base/soal/DetailSoal'))
+const GuruSoal = React.lazy(() => import('./views/base/soal/guru/Soal'))
+const AddSoal = React.lazy(() => import('./views/base/soal/guru/AddSoal'))
+const EditSoal = React.lazy(() => import('./views/base/soal/guru/EditSoal'))
+const MuridSoal= React.lazy(() => import('./views/base/soal/murid/Soal'))
 
 // Buttons
 const Buttons = React.lazy(() => import('./views/buttons/buttons/Buttons'))
@@ -60,12 +70,22 @@ const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
   { path: '/murid', name: 'Murid', element: Dashboard, exact: true },
-  { path: '/murid/materi', name: 'Materi', element: MuridMateri },
   { path: '/guru', name: 'Guru', element: Dashboard, exact: true },
-  { path: '/guru/materi', name: 'Materi', element: GuruMateri },
   { path: '/materi/:id/detail', name: 'Detail Materi', element: DetailMateri },
-  { path: '/guru/:id/edit', name: 'Edit Materi', element: EditMateri },
-  { path: '/guru/add', name: 'Tambah Materi', element: AddMateri },
+  { path: '/murid/materi', name: 'Materi', element: MuridMateri },
+  { path: '/guru/materi', name: 'Materi', element: GuruMateri },
+  { path: '/guru/add/materi', name: 'Tambah Materi', element: AddMateri },
+  { path: '/guru/materi/:id/edit', name: 'Edit Materi', element: EditMateri },
+  { path: '/video/:id/detail', name: 'Detail Video', element: DetailVideo },
+  { path: '/murid/video', name: 'Video', element: MuridVideo },
+  { path: '/guru/video', name: 'Video', element: GuruVideo },
+  { path: '/guru/add/video', name: 'Tambah Video', element: AddVideo },
+  { path: '/guru/video/:id/edit', name: 'Edit Video', element: EditVideo },
+  { path: '/soal/:id/detail', name: 'Detail Soal', element: DetailSoal },
+  { path: '/murid/soal', name: 'Soal', element: MuridSoal },
+  { path: '/guru/soal', name: 'Soal', element: GuruSoal },
+  { path: '/guru/add/soal', name: 'Tambah Soal', element: AddSoal },
+  { path: '/guru/soal/:id/edit', name: 'Edit Soal', element: EditSoal},
   { path: '/theme/colors', name: 'Colors', element: Colors },
   { path: '/theme/typography', name: 'Typography', element: Typography },
   { path: '/base', name: 'Base', element: Cards, exact: true },

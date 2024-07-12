@@ -36,7 +36,6 @@ export async function getPDF(pdf) {
 }
 
 export async function createMateri(newData) {
-    console.log(newData);
     const formData = new FormData();
     formData.append("file", newData.file);
     formData.append("name", newData.name);
@@ -56,3 +55,56 @@ export async function delMateri(id) {
     return (await makeRequest.delete(`/materi/${id}`)).data
 }
   
+export const getVideoPages = async (limit=5,pageParam = 1,filter='') => {
+    // console.log("api ==========> page " +pageParam+" limit : "+limit+" filter : "+filter);
+    const response = await makeRequest.get(`/vidmateri?page=${pageParam}&limit=${limit}&filter=${filter}`)
+    return response.data
+}
+
+export async function getVideo(id) {
+    return (await makeRequest.get(`/vidmateri/${id}`)).data
+}
+
+export async function createVideo(newData) {
+    return (await makeRequest.post('/vidmateri', newData)).data
+}
+
+export async function editVideo(newData) {
+    console.log(newData);
+    return (await makeRequest.patch(`/vidmateri/${newData.id}`,newData)).data
+}
+
+export async function delVideo(id) {
+    return (await makeRequest.delete(`/vidmateri/${id}`)).data
+}
+
+export const getSoalPages = async (limit=5,pageParam = 1,filter='') => {
+    // console.log("api ==========> page " +pageParam+" limit : "+limit+" filter : "+filter);
+    const response = await makeRequest.get(`/soal?page=${pageParam}&limit=${limit}&filter=${filter}`)
+    return response.data
+}
+
+export async function getSoal(id) {
+    return (await makeRequest.get(`/soal/${id}`)).data
+}
+
+export async function createSoal(newData) {
+    const formData = new FormData();
+    formData.append("file", newData.file);
+    formData.append("name", newData.name);
+    formData.append("about", newData.about);
+    formData.append("deadline", newData.deadline);
+    return (await makeRequest.post('/soal', formData)).data
+}
+
+export async function editSoal(newData) {
+    const formData = new FormData();
+    formData.append("file", newData.updatedFile);
+    formData.append("name", newData.name);
+    formData.append("about", newData.about);
+    return (await makeRequestUpload.patch(`/soal/${newData.id}`,formData)).data
+}
+
+export async function delSoal(id) {
+    return (await makeRequest.delete(`/soal/${id}`)).data
+}

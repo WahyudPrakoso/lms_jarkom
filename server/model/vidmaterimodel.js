@@ -25,7 +25,7 @@ const vidmateri = db.define(
       type: DataTypes.STRING,
       allowNull: false
     },
-    desc: {
+    about: {
       type: DataTypes.TEXT
     },
     link: {

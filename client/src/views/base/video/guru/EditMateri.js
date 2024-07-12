@@ -8,11 +8,11 @@ import {
 } from '@coreui/react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useMateriById } from '../../../../hooks/queries'
-import { editMateri } from '../../../../services/api'
+import { useVideoById } from '../../../../hooks/queries'
+import { editVideo } from '../../../../services/api'
 import EditMateriForm from './EditFormMateri'
 
-const EditMateri = () => {
+const EditVideoMateri = () => {
     const [err, setErr] = useState(null);
     
     const navigate = useNavigate()
@@ -26,26 +26,26 @@ const EditMateri = () => {
     const queryClient = useQueryClient()
 
     const { id } = useParams()
-    const { isPending, isError, data: materi, error, isFetching, isPlaceholderData } = useMateriById(id)
+    const { isPending, isError, data: materi, error, isFetching, isPlaceholderData } = useVideoById(id)
     const updateMateriMutation = useMutation({
-        mutationFn: editMateri,
+        mutationFn: editVideo,
         onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: ['materi'] })
-          navigate('/guru/materi')
+          queryClient.invalidateQueries({ queryKey: ['video'] })
+          navigate('/guru/video')
         },
         onError:(err) => {
             console.log(err.response.data.msg)
         }
     })
-    const handleSubmit = async (updatedMateri, updatedFile) => {
-        updateMateriMutation.mutate({ id, ...updatedMateri, updatedFile})
+    const handleSubmit = async (updatedVideo) => {
+        updateMateriMutation.mutate({ id, ...updatedVideo})
     };
   return (
     <CRow>
       <CCol xs={12}>
         <CCard className="mb-4">
           <CCardHeader>
-            <strong>Edit materi</strong>
+            <strong>Edit Video</strong>
           </CCardHeader>
           <CCardBody>
             
@@ -63,4 +63,4 @@ const EditMateri = () => {
   )
 }
 
-export default EditMateri
+export default EditVideoMateri

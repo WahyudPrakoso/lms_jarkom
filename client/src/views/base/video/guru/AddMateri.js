@@ -16,7 +16,7 @@ import { cilFile, cilBadge, cilPencil, cilTrash, cilStorage } from '@coreui/icon
 import {makeRequest} from '../../../../axios'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { createMateri } from '../../../../services/api'
+import { createMateri, createVideo } from '../../../../services/api'
 
 const AddMateri = () => {
     const [err, setErr] = useState(null);
@@ -24,30 +24,32 @@ const AddMateri = () => {
     const navigate = useNavigate()
     const [input, setInputs] = useState({
         name : "",
-        about : ""
+        about : "",
+        link : ""
     });
     const handleChange = (e) => {
+        console.log(input);
         setInputs((prev) => ({...prev, [e.target.name] : e.target.value}));
       };
     const queryClient = useQueryClient()
 
     const createMateriMutation = useMutation({
-        mutationFn: createMateri,
+        mutationFn: createVideo,
         onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: ['materi'] })
-          navigate('/guru/materi')
+          queryClient.invalidateQueries({ queryKey: ['video'] })
+          navigate('/guru/video')
         },
         onError:(err) => {
             console.log(err.response.data.msg)
         }
     })
-    const handleSubmit = async (materi, file) => {
-      createMateriMutation.mutate({...materi, file})
+    const handleSubmit = async (materi) => {
+      createMateriMutation.mutate({...materi})
       setInputs({
         name: '',
         about: '',
+        link: '',
       })
-      setFile(null)
     };
   return (
     <CRow>
@@ -81,11 +83,17 @@ const AddMateri = () => {
                         </CFormTextarea>
                     </div>
                     <div className="mb-3">
-                        <CFormLabel htmlFor="formFile">File Materi Baru</CFormLabel>
-                        <CFormInput type="file" id="formFile" name='file' onChange={(e)=> setFile(e.target.files[0])}/>
+                        <CFormLabel htmlFor="link">Link Embed Video</CFormLabel>
+                        <CFormInput
+                            type="text"
+                            id="link"
+                            name='link'
+                            placeholder="ex : https://www.youtube.com/embed/###"
+                            onChange={handleChange} required 
+                        />
                     </div>
                     <div className="d-grid">
-                        <CButton color="primary" onClick={()=>{handleSubmit(input, file)}}>Buat Materi</CButton>
+                        <CButton color="primary" onClick={()=>{handleSubmit(input, file)}}>Buat Materi Video</CButton>
                     </div>
                 </CForm>
           </CCardBody>

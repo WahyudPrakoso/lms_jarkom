@@ -46,36 +46,10 @@ const Materi = () => {
       setFilter(filter);
     }
     const { isPending, isError, data: materi, error, isFetching, isPlaceholderData } = useMateriPages(limit,page,filter)
-    // useEffect(()=>{
-    //   setDataMateri(materi);
-    //   setPending(isPending);
-    //   setIsErr(isError);
-    //   setErrMsg(error);
-    //   setFetching(isFetching);
-    // }, [])
-
-    // const {isLoading, error, data} = useQuery(['materi'], ()=>
-    //     makeRequest.get("/materi").then((res) => {
-    //         return res.data
-    //     })
-    // )
-    // console.log(totalPages);
-    const deleteSongMutation = useDeleteMateri()
 
     if (isError) return `Error: ${error.message}`
 
-    const handleDelete = (id) => deleteSongMutation.mutate(id)
-    const handleEdit = (id) => navigate(`/materi/${id}/edit`)
     const handleDetail = (id) => navigate(`/materi/${id}/detail`)
-    
-    //for pagination
-    // const handlePage = (num) => setPage(num)
-    
-    // const pagesNum = []
-    // for (let i = 0; i < materi?.total_pages; i++) {
-    //   pagesNum.push(<CPaginationItem onClick={() => handlePage(i+1)} key={i}>{i+1}</CPaginationItem>);
-    // }
-    // console.log(materi);
   return (
     <CRow>
       <CCol xs={12}>
@@ -114,10 +88,10 @@ const Materi = () => {
             ) : (
               
             <>
-              <CTable color="dark" hover align='middle' responsive caption="top">
+              <CTable color="" hover align='middle' responsive caption="top">
                 {/* <CTableCaption>Daftar data materi</CTableCaption> */}
                 
-                <CTableHead color='dark'>
+                <CTableHead color=''>
                   <CTableRow>
                     <CTableHeaderCell scope="col">#</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Pembuat</CTableHeaderCell>
@@ -149,27 +123,7 @@ const Materi = () => {
                   onPageChange={(page) => setPage(page)}
                 />
               </CPagination>
-              {/* <CPagination align="center" aria-label="Page navigation example">
-                
               
-                <CPaginationItem onClick={() => setPage((old) => Math.max(old - 1, 0))} 
-                disabled={page === 1}>
-                  Previous
-                </CPaginationItem>
-
-                {pagesNum}
-                
-                <CPaginationItem onClick={() => {
-                  if (!isPlaceholderData) {
-                    setPage((old) => old + 1)
-                  }
-                }}
-                // {...console.log(materi.total_pages)}
-                // Disable the Next Page button until we know a next page is available
-                disabled={isPlaceholderData || page === materi?.total_pages}>
-                  Next
-                </CPaginationItem>
-              </CPagination> */}
             </>       
           )}
           {isFetching ? <span> Loading...</span> : null}{' '}

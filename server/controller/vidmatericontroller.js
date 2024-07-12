@@ -1,9 +1,11 @@
 const VidMateri = require("../model/vidmaterimodel.js");
 const { v4: uuidv4 } = require("uuid");
 const User = require("../model/usermodel.js");
+const { Op } = require("sequelize");
 
 const createVidMateri = async (req, res) => {
     const { name, about, link} = req.body;
+    console.log("================================"+name,about,link);
     const user = await User.findOne({
         where: {
             id: req.user.id
@@ -26,9 +28,9 @@ const createVidMateri = async (req, res) => {
 }
 
 const updateVidMateri = async (req, res) => {
-    
     try {
         const { name, about, link} = req.body;
+        // console.log(req.params.id+"---------------------------------------"+name,about,link);
         const vidMateri = await VidMateri.findOne({
             where: {
                 uuid: req.params.id
@@ -92,8 +94,18 @@ const deleteVidMateri = async (req, res) => {
 
 const getVidMateri = async (req, res) => {
     try {
+        const page = parseInt(req.query.page)-1 || 0;
+        const limit = parseInt(req.query.limit) || 5;
+        const filter = req.query.filter || "";
+        const offset = limit * page;
         let response = await VidMateri.findAll({
             attributes: ['uuid', 'name', 'about', 'link'],
+            where: {
+                name: {
+                    [Op.like]: '%' + filter + '%'
+                }
+                
+            },
             order: [
                 ['createdAt', 'DESC']
             ],
@@ -102,12 +114,24 @@ const getVidMateri = async (req, res) => {
                     model : User,
                     attributes : ['name']
                 }
-            ]
+            ],
+            offset: offset,
+            limit: limit,
         });
+        let count = await VidMateri.count({
+            where: {
+                name: {
+                    [Op.like]: '%' + filter + '%'
+                }
+                
+            }
+        });
+        
+        const totalPage = Math.ceil(count / limit);
         // console.log(response.length);
         return response.length > 0 
-        ? res.status(200).json(response) 
-        : res.status(404).json("VidMateri telah dihapus atau belum dibuat!");
+        ? res.status(200).json({pages: page+1, offset: offset, limit: limit, total : response.length, total_pages : totalPage, data : response}) 
+        : res.status(404).json("Materi telah dihapus atau belum dibuat!");
     } catch (error) {
         return res.status(500).json({ msg: error.message });
     }
