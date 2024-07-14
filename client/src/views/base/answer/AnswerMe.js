@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import ResponsivePagination from 'react-responsive-pagination'
+import moment from 'moment-timezone';
+import 'moment/dist/locale/id'
+moment.locale('id')
+moment.tz("Asia/Jakarta")
 import {
   CButton,
   CCard,
@@ -22,12 +26,12 @@ import {
   CTableRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilPencil, cilTrash, cilStorage, cilZoom, cilReload, cilPlus } from '@coreui/icons'
+import { cilPencil, cilTrash, cilStorage, cilZoom, cilReload, cilPlus, cilColorBorder } from '@coreui/icons'
 import { Link, useNavigate } from 'react-router-dom'
-import { fetchMateri, useMateriPages, useVideoPages } from '../../../../hooks/queries'
-import { useDeleteMateri, useDeleteVideo } from '../../../../hooks/mutation'
+import { useAnswerPages, useAnswerPagesMe } from '../../../hooks/queries'
+import { useDeleteAnswer } from '../../../hooks/mutation'
 
-const VidMateri = () => {
+const Answer = () => {
     const [filter, setFilter] = useState();
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(5);
@@ -42,29 +46,29 @@ const VidMateri = () => {
     }
 
     const handleFilter = (filter) => {
-      // console.log("materi ========> page " +page+" limit : "+limit+" filter : "+filter);
       setFilter(filter);
     }
-    const { isPending, isError, data: materi, error, isFetching, isPlaceholderData } = useVideoPages(limit,page,filter)
-    const deleteVideoMutation = useDeleteVideo()
+    const { isPending, isError, data: answer, error, isFetching, isPlaceholderData } = useAnswerPagesMe(limit,page,filter)
+    const deleteMutation = useDeleteAnswer()
 
     if (isError) return `Error: ${error.message}`
 
     const handleDelete = (id) => {
-      deleteVideoMutation.mutate(id)
+      deleteMutation.mutate(id)
       setPage(1)
-      navigate('/guru/video')
+      navigate('/answer/me')
     }
-    const handleEdit = (id) => navigate(`/guru/video/${id}/edit`)
-    const handleDetail = (id) => navigate(`/video/${id}/detail`)
-    const handleAdd = () => navigate(`/guru/add/video`)
+    const handleEdit = (id) => navigate(`/guru/answer/${id}/edit`)
+    const handleDetail = (id) => navigate(`/answer/${id}/detail`)
+    // console.log(answer);
+
   return (
     <CRow>
       <CCol xs={12}>
         <CCard className="mb-4">
           <CCardHeader>
             <div style={{display:'flex'}} className='mt-2'>
-              <h3>Daftar materi</h3>
+              <h5>Daftar Jawaban yang Sudah Terupload</h5>
               <div style={{marginLeft:'auto'}}>
                 <CInputGroup className="mb-3" >
                   <CFormSelect onChange={handleLimit} size='sm'>
@@ -73,11 +77,6 @@ const VidMateri = () => {
                     <option value="10">10</option>
                     <option value="20">20</option>
                   </CFormSelect>
-                  <CInputGroupText id="basic-addon1" style={{backgroundColor:'#249542'}}>
-                    <CButton className='p-0' onClick={handleAdd} style={{color:'white'}}>
-                      Tambah Data <CIcon icon={cilPlus} size='lg'></CIcon>
-                    </CButton>
-                  </CInputGroupText>
                   <CFormInput aria-label="Username" type='text' name='search' placeholder='Cari : judul' onChange={handleFilterField}/>
                   <CInputGroupText id="basic-addon2">
                     <CButton className='p-0' onClick={() => {handleFilter(fieldFilter,page,limit)}}>
@@ -102,33 +101,28 @@ const VidMateri = () => {
               
             <>
               <CTable color="" hover align='middle' responsive caption="top">
-                {/* <CTableCaption>Daftar data materi</CTableCaption> */}
-                
+                {/* <CTableCaption>Daftar data Soal</CTableCaption> */}
                 <CTableHead color=''>
                   <CTableRow>
                     <CTableHeaderCell scope="col">#</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Pembuat</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Judul</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Keterangan</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">User</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Soal</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Status</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Nilai</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Aksi</CTableHeaderCell>
                   </CTableRow>
                 </CTableHead>
                 <CTableBody>
-                    {materi.data?.map((materiContent, index)=>(
-                        <CTableRow key={materiContent.uuid}>
-                            <CTableHeaderCell scope="row">{(index+1)+materi.offset}</CTableHeaderCell>
-                            <CTableDataCell>{materiContent.user.name}</CTableDataCell>
-                            <CTableDataCell>{materiContent.name}</CTableDataCell>
-                            <CTableDataCell>{materiContent.about}</CTableDataCell>
+                    {answer.data?.map((answerContent, index)=>(
+                        <CTableRow key={answerContent.uuid}>
+                            <CTableHeaderCell scope="row">{(index+1)+answer.offset}</CTableHeaderCell>
+                            <CTableDataCell>{answerContent.user.name}</CTableDataCell>
+                            <CTableDataCell>{answerContent.soal.name}</CTableDataCell>
+                            <CTableDataCell>{answerContent.status}</CTableDataCell>
+                            <CTableDataCell>{answerContent.nilai}</CTableDataCell>
                             <CTableDataCell>
-                                <CButton color="primary" className="mb-1 mt-1 px-3 mx-1" onClick={() => handleDetail(materiContent.uuid)}>
+                                <CButton color="primary" className="mb-1 mt-1 px-3 mx-1" onClick={() => handleDetail(answerContent.uuid)}>
                                     <CIcon icon={cilStorage} />
-                                </CButton>
-                                <CButton color="warning" className="mb-1 mt-1 px-3 mx-1" onClick={() => handleEdit(materiContent.uuid)}>
-                                    <CIcon icon={cilPencil} />
-                                </CButton>
-                                <CButton color="danger" className="mb-1 mt-1 px-3 mx-1" onClick={() => handleDelete(materiContent.uuid)}>
-                                    <CIcon icon={cilTrash} />
                                 </CButton>
                             </CTableDataCell>
                         </CTableRow>
@@ -137,7 +131,7 @@ const VidMateri = () => {
               </CTable>
                 <CPagination align="end" style={{marginRight:"40px",marginTop:"2ren",marginLeft:'auto'}}>
                 <ResponsivePagination
-                  total={materi?.total_pages}
+                  total={answer?.total_pages}
                   current={page}
                   onPageChange={(page) => setPage(page)}
                 />
@@ -152,4 +146,4 @@ const VidMateri = () => {
   )
 }
 
-export default VidMateri
+export default Answer

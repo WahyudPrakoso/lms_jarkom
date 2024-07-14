@@ -30,8 +30,8 @@ const EditSoal = () => {
             console.log(err.response.data.msg)
         }
     })
-    const handleSubmit = async (updatedSoal, updatedFile) => {
-        updateSoalMutation.mutate({ id, ...updatedSoal, updatedFile})
+    const handleSubmit = async (updatedSoal, deadline) => {
+        updateSoalMutation.mutate({ id, ...updatedSoal, deadline})
     };
   return (
     <CRow>

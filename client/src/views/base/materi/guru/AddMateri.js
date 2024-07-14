@@ -20,11 +20,11 @@ import { createMateri } from '../../../../services/api'
 
 const AddMateri = () => {
     const [err, setErr] = useState(null);
-    const [file, setFile] = useState(null)
     const navigate = useNavigate()
     const [input, setInputs] = useState({
         name : "",
-        about : ""
+        about : "",
+        file : ""
     });
     const handleChange = (e) => {
         setInputs((prev) => ({...prev, [e.target.name] : e.target.value}));
@@ -41,13 +41,13 @@ const AddMateri = () => {
             console.log(err.response.data.msg)
         }
     })
-    const handleSubmit = async (materi, file) => {
-      createMateriMutation.mutate({...materi, file})
+    const handleSubmit = async (materi) => {
+      createMateriMutation.mutate({...materi})
       setInputs({
         name: '',
         about: '',
+        file: '',
       })
-      setFile(null)
     };
   return (
     <CRow>
@@ -81,11 +81,17 @@ const AddMateri = () => {
                         </CFormTextarea>
                     </div>
                     <div className="mb-3">
-                        <CFormLabel htmlFor="formFile">File Materi Baru</CFormLabel>
-                        <CFormInput type="file" id="formFile" name='file' onChange={(e)=> setFile(e.target.files[0])}/>
+                        <CFormLabel htmlFor="judul">Link Embed File PDF</CFormLabel>
+                        <CFormInput
+                            type="text"
+                            id="file"
+                            name='file'
+                            placeholder="ex : https://drive.google.com/file/d/####/preview"
+                            onChange={handleChange} required 
+                        />
                     </div>
                     <div className="d-grid">
-                        <CButton color="primary" onClick={()=>{handleSubmit(input, file)}}>Buat Materi</CButton>
+                        <CButton color="primary" onClick={()=>{handleSubmit(input)}}>Buat Materi</CButton>
                     </div>
                 </CForm>
           </CCardBody>

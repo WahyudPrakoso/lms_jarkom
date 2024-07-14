@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-import { delMateri, delSoal, delVideo } from '../services/api'
+import { delAnswer, delMateri, delSoal, delVideo } from '../services/api'
 
 export function useDeleteMateri() {
   const queryClient = useQueryClient()
@@ -37,6 +37,19 @@ export function useDeleteSoal() {
     onSuccess() {
       queryClient.invalidateQueries({ queryKey: ['soal'] })
       console.log('soal deleted successfully 🎉')
+    },
+  })
+}
+
+export function useDeleteAnswer() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: delAnswer,
+
+    onSuccess() {
+      queryClient.invalidateQueries({ queryKey: ['answer'] })
+      console.log('Jawaban deleted successfully 🎉')
     },
   })
 }

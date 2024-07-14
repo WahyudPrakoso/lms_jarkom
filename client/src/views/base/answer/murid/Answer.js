@@ -24,10 +24,10 @@ import {
 import CIcon from '@coreui/icons-react'
 import { cilPencil, cilTrash, cilStorage, cilZoom, cilReload, cilPlus } from '@coreui/icons'
 import { Link, useNavigate } from 'react-router-dom'
-import { fetchMateri, useMateriPages, useVideoPages } from '../../../../hooks/queries'
-import { useDeleteMateri, useDeleteVideo } from '../../../../hooks/mutation'
+import { fetchMateri, useMateriPages } from '../../../../hooks/queries'
+import { useDeleteMateri } from '../../../../hooks/mutation'
 
-const VidMateri = () => {
+const Soal = () => {
     const [filter, setFilter] = useState();
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(5);
@@ -45,19 +45,11 @@ const VidMateri = () => {
       // console.log("materi ========> page " +page+" limit : "+limit+" filter : "+filter);
       setFilter(filter);
     }
-    const { isPending, isError, data: materi, error, isFetching, isPlaceholderData } = useVideoPages(limit,page,filter)
-    const deleteVideoMutation = useDeleteVideo()
+    const { isPending, isError, data: materi, error, isFetching, isPlaceholderData } = useMateriPages(limit,page,filter)
 
     if (isError) return `Error: ${error.message}`
 
-    const handleDelete = (id) => {
-      deleteVideoMutation.mutate(id)
-      setPage(1)
-      navigate('/guru/video')
-    }
-    const handleEdit = (id) => navigate(`/guru/video/${id}/edit`)
-    const handleDetail = (id) => navigate(`/video/${id}/detail`)
-    const handleAdd = () => navigate(`/guru/add/video`)
+    const handleDetail = (id) => navigate(`/materi/${id}/detail`)
   return (
     <CRow>
       <CCol xs={12}>
@@ -73,11 +65,6 @@ const VidMateri = () => {
                     <option value="10">10</option>
                     <option value="20">20</option>
                   </CFormSelect>
-                  <CInputGroupText id="basic-addon1" style={{backgroundColor:'#249542'}}>
-                    <CButton className='p-0' onClick={handleAdd} style={{color:'white'}}>
-                      Tambah Data <CIcon icon={cilPlus} size='lg'></CIcon>
-                    </CButton>
-                  </CInputGroupText>
                   <CFormInput aria-label="Username" type='text' name='search' placeholder='Cari : judul' onChange={handleFilterField}/>
                   <CInputGroupText id="basic-addon2">
                     <CButton className='p-0' onClick={() => {handleFilter(fieldFilter,page,limit)}}>
@@ -124,12 +111,6 @@ const VidMateri = () => {
                                 <CButton color="primary" className="mb-1 mt-1 px-3 mx-1" onClick={() => handleDetail(materiContent.uuid)}>
                                     <CIcon icon={cilStorage} />
                                 </CButton>
-                                <CButton color="warning" className="mb-1 mt-1 px-3 mx-1" onClick={() => handleEdit(materiContent.uuid)}>
-                                    <CIcon icon={cilPencil} />
-                                </CButton>
-                                <CButton color="danger" className="mb-1 mt-1 px-3 mx-1" onClick={() => handleDelete(materiContent.uuid)}>
-                                    <CIcon icon={cilTrash} />
-                                </CButton>
                             </CTableDataCell>
                         </CTableRow>
                     ))}
@@ -142,6 +123,7 @@ const VidMateri = () => {
                   onPageChange={(page) => setPage(page)}
                 />
               </CPagination>
+              
             </>       
           )}
           {isFetching ? <span> Loading...</span> : null}{' '}
@@ -152,4 +134,4 @@ const VidMateri = () => {
   )
 }
 
-export default VidMateri
+export default Soal

@@ -3,9 +3,9 @@ import { useState } from 'react'
 const EditMateriForm = ({onsubmit, initialValue})=>{
     const [materi, setMateri] = useState({
         name: initialValue?.name || '',
-        about: initialValue?.about || ''
+        about: initialValue?.about || '',
+        file: initialValue?.file || ''
     })
-    const [file, setFile] = useState(null)
     const handleChangeInput = (evt) => {
         setMateri({
           ...materi,
@@ -21,6 +21,19 @@ const EditMateriForm = ({onsubmit, initialValue})=>{
                 id="judul"
                 name={elementName.toLowerCase()}
                 placeholder="ex : Materi Pengenalan Jarkom"
+                onChange={handleChangeInput} required
+                value = {materi[elementName.toLowerCase()]} 
+            />
+        </div>
+    )
+    const createFileInputElement = (elementName) => (
+        <div className="mb-3">
+            <CFormLabel htmlFor="file">Link Embed File PDF</CFormLabel>
+            <CFormInput
+                type="text"
+                id="file"
+                name={elementName.toLowerCase()}
+                placeholder="ex : ex : https://drive.google.com/file/d/####/preview"
                 onChange={handleChangeInput} required
                 value = {materi[elementName.toLowerCase()]} 
             />
@@ -42,24 +55,21 @@ const EditMateriForm = ({onsubmit, initialValue})=>{
     )
     const handleSubmit = (evt) => {
         evt.preventDefault()
-        onsubmit(materi, file)
+
+        onsubmit(materi)
     
         setMateri({
           name: '',
           about: '',
+          file:''
         })
-        setFile(null)
     }
     return(
         <CForm encType='multipart/form-data' id='formEditMateri'>
 
             {createTextInputElement('name')}
             {createTextareaInputElement('about')}
-            
-            <div className="mb-3">
-                <CFormLabel htmlFor="formFile">File Materi Baru</CFormLabel>
-                <CFormInput type="file" id="formFile" name='file' onChange={(e)=> setFile(e.target.files[0])}/>
-            </div>
+            {createFileInputElement('file')}
             <div className="d-grid">
                 <CButton color="primary" onClick={handleSubmit}>Edit Materi</CButton>
             </div>

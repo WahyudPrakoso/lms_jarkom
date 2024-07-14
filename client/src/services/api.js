@@ -35,20 +35,23 @@ export async function getPDF(pdf) {
     return (await makeRequest.post(`/pdf/`, pdf, {responseType: 'blob'})).data
 }
 
+// sending form with file in one of data
+
+// export async function createMateri(newData) {
+//     const formData = new FormData();
+//     formData.append("file", newData.file);
+//     formData.append("name", newData.name);
+//     formData.append("about", newData.about);
+//     return (await makeRequest.post('/materi', formData)).data
+// }
+
+//without file
 export async function createMateri(newData) {
-    const formData = new FormData();
-    formData.append("file", newData.file);
-    formData.append("name", newData.name);
-    formData.append("about", newData.about);
-    return (await makeRequest.post('/materi', formData)).data
+    return (await makeRequest.post('/materi', newData)).data
 }
 
 export async function editMateri(newData) {
-    const formData = new FormData();
-    formData.append("file", newData.updatedFile);
-    formData.append("name", newData.name);
-    formData.append("about", newData.about);
-    return (await makeRequestUpload.patch(`/materi/${newData.id}`,formData)).data
+    return (await makeRequest.patch(`/materi/${newData.id}`,newData)).data
 }
 
 export async function delMateri(id) {
@@ -70,7 +73,6 @@ export async function createVideo(newData) {
 }
 
 export async function editVideo(newData) {
-    console.log(newData);
     return (await makeRequest.patch(`/vidmateri/${newData.id}`,newData)).data
 }
 
@@ -79,7 +81,6 @@ export async function delVideo(id) {
 }
 
 export const getSoalPages = async (limit=5,pageParam = 1,filter='') => {
-    // console.log("api ==========> page " +pageParam+" limit : "+limit+" filter : "+filter);
     const response = await makeRequest.get(`/soal?page=${pageParam}&limit=${limit}&filter=${filter}`)
     return response.data
 }
@@ -89,22 +90,47 @@ export async function getSoal(id) {
 }
 
 export async function createSoal(newData) {
-    const formData = new FormData();
-    formData.append("file", newData.file);
-    formData.append("name", newData.name);
-    formData.append("about", newData.about);
-    formData.append("deadline", newData.deadline);
-    return (await makeRequest.post('/soal', formData)).data
+    return (await makeRequest.post('/soal', newData)).data
 }
 
 export async function editSoal(newData) {
-    const formData = new FormData();
-    formData.append("file", newData.updatedFile);
-    formData.append("name", newData.name);
-    formData.append("about", newData.about);
-    return (await makeRequestUpload.patch(`/soal/${newData.id}`,formData)).data
+    return (await makeRequest.patch(`/soal/${newData.id}`,newData)).data
 }
 
 export async function delSoal(id) {
     return (await makeRequest.delete(`/soal/${id}`)).data
+}
+
+export const getAnswerPages = async (limit=5,pageParam = 1,filter='') => {
+    const response = await makeRequest.get(`/answer?page=${pageParam}&limit=${limit}&filter=${filter}`)
+    return response.data
+}
+
+export const getAnswerPagesMe = async (limit=5,pageParam = 1,filter='') => {
+    const response = await makeRequest.get(`/answer/me?page=${pageParam}&limit=${limit}&filter=${filter}`)
+    return response.data
+}
+
+export const getAnswerPagesSoal = async (id,limit=5,pageParam = 1,filter='') => {
+    const response = await makeRequest.get(`/answer/soal/${id}?page=${pageParam}&limit=${limit}&filter=${filter}`)
+    return response.data
+}
+
+export async function getAnswer(id) {
+    return (await makeRequest.get(`/answer/detail/${id}`)).data
+}
+
+export async function createAnswer(newData) {
+    return (await makeRequest.post(`/answer/${newData.id}`, newData)).data
+}
+
+export async function editAnswer(newData) {
+    return (await makeRequest.patch(`/answer/${newData.id}`,newData)).data
+
+}export async function editNilai(newData) {
+    return (await makeRequest.patch(`/answer/nilai/${newData.id}`,newData)).data
+}
+
+export async function delAnswer(id) {
+    return (await makeRequest.delete(`/answer/${id}`)).data
 }

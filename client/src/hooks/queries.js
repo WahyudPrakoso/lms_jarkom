@@ -1,6 +1,18 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 
-import { getAllMateri, getMateri, getMateriPages, getPDF, getSoal, getSoalPages, getVideo, getVideoPages } from '../services/api'
+import { 
+  getAllMateri, 
+  getAnswer, 
+  getAnswerPages, 
+  getAnswerPagesMe, 
+  getAnswerPagesSoal, 
+  getMateri, 
+  getMateriPages, 
+  getPDF, getSoal, 
+  getSoalPages, 
+  getVideo, 
+  getVideoPages } from '../services/api'
+
 export function fetchMateri() {
   return useQuery({
     queryKey: ['materi'],
@@ -19,7 +31,7 @@ export function useMateriPages(limit,page,filter) {
 
 export function useMateriById(id){
   return useQuery({
-    queryKey: ['materi', id],
+    queryKey: ['materibyid', id],
     queryFn: () => getMateri(id),
   })
 }
@@ -41,7 +53,7 @@ export function useVideoPages(limit,page,filter) {
 
 export function useVideoById(id){
   return useQuery({
-    queryKey: ['video', id],
+    queryKey: ['videobyid', id],
     queryFn: () => getVideo(id),
   })
 }
@@ -56,7 +68,41 @@ export function useSoalPages(limit,page,filter) {
 
 export function useSoalById(id){
   return useQuery({
-    queryKey: ['soal', id],
+    queryKey: ['soalbyid', id],
     queryFn: () => getSoal(id),
+  })
+}
+
+export function useAnswerPages(limit,page,filter) {
+  // console.log("hook =========> page " +page+" limit : "+limit+" filter : "+filter);
+  return useQuery({
+    queryKey: ['answer', {limit,page,filter}],
+    queryFn: () => getAnswerPages(limit,page,filter),
+    placeholderData: keepPreviousData,
+  });
+}
+
+export function useAnswerPagesMe(limit,page,filter) {
+  // console.log("hook =========> page " +page+" limit : "+limit+" filter : "+filter);
+  return useQuery({
+    queryKey: ['answerMe', {limit,page,filter}],
+    queryFn: () => getAnswerPagesMe(limit,page,filter),
+    placeholderData: keepPreviousData,
+  });
+}
+
+export function useAnswerPagesSoal(id,limit,page,filter) {
+  // console.log("hook =========> page " +page+" limit : "+limit+" filter : "+filter);
+  return useQuery({
+    queryKey: ['answerSoal', {id,limit,page,filter}],
+    queryFn: () => getAnswerPagesSoal(id,limit,page,filter),
+    placeholderData: keepPreviousData,
+  });
+}
+
+export function useAnswerById(id){
+  return useQuery({
+    queryKey: ['answerbyid', id],
+    queryFn: () => getAnswer(id),
   })
 }

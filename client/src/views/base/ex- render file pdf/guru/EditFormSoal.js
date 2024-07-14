@@ -11,9 +11,9 @@ const EditSoalForm = ({onsubmit, initialValue})=>{
     const [soal, setSoal] = useState({
         name: initialValue?.name || '',
         about: initialValue?.about || '',
-        file: initialValue?.file || ''
+        deadline: initialValue?.deadline || ''
     })
-    const [deadline, setDeadline] = useState(new Date())
+    const [file, setFile] = useState(null)
     const handleChangeInput = (evt) => {
         setSoal({
           ...soal,
@@ -48,28 +48,16 @@ const EditSoalForm = ({onsubmit, initialValue})=>{
             </CFormTextarea>
         </div>
     )
-    const createFileInputElement = (elementName) => (
-        <div className="mb-3">
-            <CFormLabel htmlFor="file">Link Embed File PDF</CFormLabel>
-            <CFormInput
-                type="text"
-                id="file"
-                name={elementName.toLowerCase()}
-                placeholder="ex :  https://drive.google.com/file/d/####/preview"
-                onChange={handleChangeInput} required
-                value = {soal[elementName.toLowerCase()]} 
-            />
-        </div>
-    )
     const handleSubmit = (evt) => {
-        onsubmit(soal, deadline)
+        evt.preventDefault()
+        onsubmit(soal, file)
     
-        setSoal({
+        setMateri({
           name: '',
           about: '',
-          file:''
+          deadline: '',
         })
-        setDeadline(new Date())
+        setFile(null)
     }
 
     return(
@@ -77,7 +65,6 @@ const EditSoalForm = ({onsubmit, initialValue})=>{
 
             {createTextInputElement('name')}
             {createTextareaInputElement('about')}
-            {createFileInputElement('file')}
             <CFormLabel htmlFor='deadline'>Deadline</CFormLabel>
             <div className='mb-3'>
                 <DateTimePicker
@@ -92,12 +79,16 @@ const EditSoalForm = ({onsubmit, initialValue})=>{
                     nativeInputAriaLabel="Date and time"
                     secondAriaLabel="Second"
                     yearAriaLabel="Year" 
-                    onChange={setDeadline} 
-                    value={deadline} 
+                    onChange={handleChangeInput} 
+                    value={moment(soal['deadline'])} 
                 />
             </div>
+            <div className="mb-3">
+                <CFormLabel htmlFor="formFile">File Materi Baru</CFormLabel>
+                <CFormInput type="file" id="formFile" name='file' onChange={(e)=> setFile(e.target.files[0])}/>
+            </div>
             <div className="d-grid">
-                <CButton color="primary" onClick={()=>{handleSubmit(soal,deadline)}}>Edit Soal</CButton>
+                <CButton color="primary" onClick={handleSubmit}>Edit Materi</CButton>
             </div>
         </CForm>
     )

@@ -44,21 +44,22 @@ const uploadFile = multer({
 // }])
 
 const createMateri = async (req, res) => {
-    const { name, about} = req.body;
-    if (!req.file) return res.status(500).json({ msg: "upload gagal" });
+    const { name, about, file} = req.body;
+    // if (!req.file) return res.status(500).json({ msg: "upload gagal" });
     const user = await User.findOne({
         where: {
             id: req.user.id
         }
     });
     if (!user) return res.status(404).json({ msg: "User tidak ditemukan" });
+    if(user.role === '1711') return res.status(401).json({ msg: "Unauthorized!" });
     try {
         await Materi.create({
             uuid: uuidv4(),
             userId: user.id,
             name: name,
             about: about,
-            file: 'storage/files/'+req.file.filename
+            file: file
         });
         return res.status(201).json({ msg: "Materi berhasil dibuat!" });
         // res.status(201).json({msg: "Register Berhasil"});
@@ -70,42 +71,38 @@ const createMateri = async (req, res) => {
 const updateMateri = async (req, res) => {
     
     try {
-        const { name, about} = req.body;
+        const { name, about,file} = req.body;
         const materi = await Materi.findOne({
             where: {
                 uuid: req.params.id
             }
         });
         if (!materi) return res.status(404).json({ msg: "Materi tidak ditemukan" });
-        console.log("asdadassssssssssssssssssssssssssssssssssssssssssssssssss "+name, about);
-        if (!req.file) return res.status(500).json({ msg: "upload gagal" });
-        let filename = ( req.file && req.file) ? req.file.filename :materi.file
+        // if (!req.file) return res.status(500).json({ msg: "upload gagal" });
+        // let filename = ( req.file && req.file) ? req.file.filename :materi.file
         const user = await User.findOne({
             where: {
                 id: req.user.id
             }
         });
         if (!user) return res.status(404).json({ msg: "User tidak ditemukan" });
-        if(user.id === materi.userId){
+        if(user.role === '1711') return res.status(401).json({ msg: "Unauthorized!" });
             await Materi.update({
                 name: name,
                 about: about,
-                file: 'storage/files/'+filename
+                file: file
             }, {
                 where: {
                     id: materi.id
                 }
             });
             
-            fs.unlink(materi.file, (err) => {
-                if (err) {
-                    throw err;
-                }
-            });
-            return res.status(201).json({ msg: "Update Materi Berhasil" });
-        }else{
-            return res.status(401).json("User bukan pembuat materi!");
-        }
+            // fs.unlink(materi.file, (err) => {
+            //     if (err) {
+            //         throw err;
+            //     }
+            // });
+        return res.status(201).json({ msg: "Update Materi Berhasil" });
         
     } catch (error) {
         return res.status(400).json({ msg: error.message });
@@ -125,21 +122,18 @@ const deleteMateri = async (req, res) => {
             }
         });
         if (!user) return res.status(404).json({ msg: "User tidak ditemukan" });
-        if(user.id === materi.userId){
+        if(user.role === '1711') return res.status(401).json({ msg: "Unauthorized!" });
             await Materi.destroy({
                 where: {
                     id: materi.id
                 }
             });
-            fs.unlink(materi.file, (err) => {
-                if (err) {
-                    throw err;
-                }
-            });
-            return res.status(201).json({ msg: "Delete Materi Berhasil" });
-        }else{
-            return res.status(401).json("User bukan pembuat materi!");
-        }
+            // fs.unlink(materi.file, (err) => {
+            //     if (err) {
+            //         throw err;
+            //     }
+            // });
+        return res.status(201).json({ msg: "Delete Materi Berhasil" });
         
     } catch (error) {
         res.status(500).json({ msg: error.message });
@@ -194,9 +188,9 @@ const getMateri = async (req, res) => {
         
         const totalPage = Math.ceil(count / limit);
         // console.log(response.length);
-        response.map(function(res){
-            res = process.env.APP_ADDRESS + "/" + res.file
-        })
+        // response.map(function(res){
+        //     res = process.env.APP_ADDRESS + "/" + res.file
+        // })
         return response.length > 0 
         ? res.status(200).json({pages: page+1, offset: offset, limit: limit, total : response.length, total_pages : totalPage, data : response}) 
         : res.status(404).json("Materi telah dihapus atau belum dibuat!");

@@ -33,7 +33,7 @@ const useranswer = db.define(
       type: DataTypes.STRING
     },
     nilai: {
-      type: DataTypes.INTEGER
+      type: DataTypes.STRING
     },
     status: {
       type: DataTypes.STRING

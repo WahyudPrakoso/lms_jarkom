@@ -22,13 +22,16 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { createSoal } from '../../../../services/api'
 
 const AddSoal = () => {
+    const now = moment();
+    const [err, setErr] = useState(null);
+    const [file, setFile] = useState(null)
     const [deadline, setDeadline] = useState(new Date())
     const navigate = useNavigate()
     const [input, setInputs] = useState({
         name : "",
-        about : "",
-        file : ""
+        about : ""
     });
+    console.log(moment());
     const handleChange = (e) => {
         setInputs((prev) => ({...prev, [e.target.name] : e.target.value}));
     };
@@ -44,13 +47,13 @@ const AddSoal = () => {
             console.log(err.response.data.msg)
         }
     })
-    const handleSubmit = async (content,deadline) => {
-      createMutation.mutate({...content,deadline})
+    const handleSubmit = async (content,deadline, file) => {
+      createMutation.mutate({...content,deadline, file})
       setInputs({
         name: '',
         about: '',
-        file: '',
       })
+      setFile(null)
       setDeadline(new Date())
     };
 
@@ -85,16 +88,6 @@ const AddSoal = () => {
                         >
                         </CFormTextarea>
                     </div>
-                    <div className="mb-3">
-                        <CFormLabel htmlFor="file">Link Embed File PDF</CFormLabel>
-                        <CFormInput
-                            type="text"
-                            id="file"
-                            name='file'
-                            placeholder="ex :  https://drive.google.com/file/d/####/preview"
-                            onChange={handleChange} required 
-                        />
-                    </div>
                     <CFormLabel htmlFor='deadline'>Deadline</CFormLabel>
                     <div className='mb-3'>
                         <DateTimePicker
@@ -113,8 +106,12 @@ const AddSoal = () => {
                             value={deadline}
                         />
                     </div>
+                    <div className="mb-3">
+                        <CFormLabel htmlFor="formFile">File Materi Baru</CFormLabel>
+                        <CFormInput type="file" id="formFile" name='file' onChange={(e)=> setFile(e.target.files[0])}/>
+                    </div>
                     <div className="d-grid">
-                        <CButton color="primary" onClick={()=>{handleSubmit(input,deadline)}}>Buat Soal</CButton>
+                        <CButton color="primary" onClick={()=>{handleSubmit(input,deadline, file)}}>Buat Materi</CButton>
                     </div>
                 </CForm>
           </CCardBody>

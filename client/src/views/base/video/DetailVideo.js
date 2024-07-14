@@ -44,17 +44,17 @@ const DetailVideo = (e) => {
                 {materi.about}
             </p>
             <div style={{display:'flex', justifyContent:'center'}} className='mt-3'>
-            <iframe 
-              width={800}
-              height={450}
-              src={materi.link}
-              title="Materi jarkom" 
-              frameborder="0" 
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-              referrerpolicy="strict-origin-when-cross-origin" 
-              allowfullscreen>
-              
-            </iframe>
+              <iframe 
+                width={800}
+                height={450}
+                src={materi.link}
+                title="Materi jarkom" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                referrerpolicy="strict-origin-when-cross-origin" 
+                allowFullScreen>
+                
+              </iframe>
             </div>
           </CCardBody>
           </>       

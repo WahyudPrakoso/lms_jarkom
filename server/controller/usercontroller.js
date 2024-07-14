@@ -150,10 +150,10 @@ const createUser = async (req, res) => {
         Guru = 0105
         
         */
-        let kode = code
-        if(!kode) kode = "1711";
         const role = ["1711","0105"];
-        if(!role.includes(kode)) return res.status(404).json("tidak ditemukan kode yang cocok")
+        let kode = code
+        if(!kode || !role.includes(kode)) kode = "1711";
+        // if(!role.includes(kode)) return res.status(404).json("tidak ditemukan kode yang cocok")
  
         await User.create({
             uuid: uuidv4(),

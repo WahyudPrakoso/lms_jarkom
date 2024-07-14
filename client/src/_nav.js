@@ -3,8 +3,11 @@ import CIcon from '@coreui/icons-react'
 import {
   cilAccountLogout,
   cilBook,
+  cilGolf,
+  cilListRich,
   cilSchool,
   cilSpeedometer,
+  cilTask,
   cilVideo,
 } from '@coreui/icons'
 import { CNavItem, CNavTitle } from '@coreui/react'
@@ -40,6 +43,12 @@ const _nav = [
     component: CNavItem,
     name: 'Soal',
     to: '/murid/soal',
+    icon: <CIcon icon={cilTask} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Jawaban',
+    to: '/answer/me',
     icon: <CIcon icon={cilSchool} customClassName="nav-icon" />,
   },
   {
@@ -62,11 +71,29 @@ const _nav = [
     component: CNavItem,
     name: 'Soal',
     to: '/guru/soal',
+    icon: <CIcon icon={cilTask} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Jawaban',
+    to: '/answer/me',
     icon: <CIcon icon={cilSchool} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Semua Jawaban',
+    to: '/guru/answer/',
+    icon: <CIcon icon={cilListRich} customClassName="nav-icon" />,
   },
   {
     component: CNavTitle,
     name: 'Akun',
+  },
+  {
+    component: CNavItem,
+    name: 'Login',
+    to: '/login',
+    icon: <CIcon icon={cilGolf} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,

@@ -60,11 +60,15 @@ const Materi = () => {
     //     })
     // )
     // console.log(totalPages);
-    const deleteSongMutation = useDeleteMateri()
+    const deleteMutation = useDeleteMateri()
 
     if (isError) return `Error: ${error.message}`
 
-    const handleDelete = (id) => deleteSongMutation.mutate(id)
+    const handleDelete = (id) => {
+      deleteMutation.mutate(id)
+      setPage(1)
+      navigate('/guru/materi')
+    }
     const handleEdit = (id) => navigate(`/guru/materi/${id}/edit`)
     const handleDetail = (id) => navigate(`/materi/${id}/detail`)
     const handleAdd = () => navigate(`/guru/add/materi`)

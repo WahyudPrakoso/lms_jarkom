@@ -5,13 +5,14 @@ const { Op } = require("sequelize");
 
 const createVidMateri = async (req, res) => {
     const { name, about, link} = req.body;
-    console.log("================================"+name,about,link);
+    // console.log("================================"+name,about,link);
     const user = await User.findOne({
         where: {
             id: req.user.id
         }
     });
     if (!user) return res.status(404).json({ msg: "User tidak ditemukan" });
+    if(user.role === '1711') return res.status(401).json({ msg: "Unauthorized!" });
     try {
         await VidMateri.create({
             uuid: uuidv4(),
@@ -43,6 +44,7 @@ const updateVidMateri = async (req, res) => {
             }
         });
         if (!user) return res.status(404).json({ msg: "User tidak ditemukan" });
+        if(user.role === '1711') return res.status(401).json({ msg: "Unauthorized!" });
         if(user.id === vidMateri.userId){
             await VidMateri.update({
                 name: name,
@@ -76,6 +78,7 @@ const deleteVidMateri = async (req, res) => {
             }
         });
         if (!user) return res.status(404).json({ msg: "User tidak ditemukan" });
+        if(user.role === '1711') return res.status(401).json({ msg: "Unauthorized!" });
         if(user.id === vidMateri.userId){
             await VidMateri.destroy({
                 where: {

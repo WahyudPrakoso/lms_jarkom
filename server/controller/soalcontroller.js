@@ -6,6 +6,7 @@ const fs = require('fs');
 const User = require("../model/usermodel.js");
 const moment = require("moment-timezone");
 const { Op } = require("sequelize");
+const useranswer = require("../model/useranswermodel.js");
 // const tz = require("moment-timezone");
 
 // const date = Date.format(Date('YYYYMMDDHHmmss'))
@@ -44,14 +45,16 @@ const uploadFile = multer({
 // }])
 
 const createSoal = async (req, res) => {
-    const { name, about, deadline} = req.body;
-    if (!req.file) return res.status(500).json({ msg: "upload gagal" });
+    const { name, about, file, deadline} = req.body;
+    console.log("----------=========================", file);
+    // if (!req.file) return res.status(500).json({ msg: "upload gagal" });
     const user = await User.findOne({
         where: {
             id: req.user.id
         }
     });
     if (!user) return res.status(404).json({ msg: "User tidak ditemukan" });
+    if(user.role === '1711') return res.status(401).json({ msg: "Unauthorized!" });
     try {
         const dl = moment(deadline)
         await Soal.create({
@@ -60,7 +63,7 @@ const createSoal = async (req, res) => {
             name: name,
             about: about,
             deadline : new Date(dl),
-            file: 'storage/files/'+req.file.filename
+            file: file
         });
         return res.status(201).json({ msg: "Soal berhasil dibuat!" });
         // res.status(201).json({msg: "Register Berhasil"});
@@ -72,8 +75,8 @@ const createSoal = async (req, res) => {
 const updateSoal = async (req, res) => {
     
     try {
-        const { name, about, deadline} = req.body;
-        if (!req.file) return res.status(500).json({ msg: "upload gagal" });
+        const { name, about,file, deadline} = req.body;
+        // if (!req.file) return res.status(500).json({ msg: "upload gagal" });
         const soal = await Soal.findOne({
             where: {
                 uuid: req.params.id
@@ -86,24 +89,25 @@ const updateSoal = async (req, res) => {
             }
         });
         if (!user) return res.status(404).json({ msg: "User tidak ditemukan" });
+        if(user.role === '1711') return res.status(401).json({ msg: "Unauthorized!" });
         if(user.id === soal.userId){
             const dl = moment(deadline)
             await Soal.update({
                 name: name,
                 about: about,
                 deadline : dl,
-                file: 'storage/files/'+req.file.filename
+                file: file
             }, {
                 where: {
                     id: soal.id
                 }
             });
             
-            fs.unlink(soal.file, (err) => {
-                if (err) {
-                    throw err;
-                }
-            });
+            // fs.unlink(soal.file, (err) => {
+            //     if (err) {
+            //         throw err;
+            //     }
+            // });
             return res.status(201).json({ msg: "Update Soal Berhasil" });
         }else{
             return res.status(401).json("User bukan pembuat Soal!");
@@ -128,17 +132,18 @@ const deleteSoal = async (req, res) => {
             }
         });
         if (!user) return res.status(404).json({ msg: "User tidak ditemukan" });
+        if(user.role === '1711') return res.status(401).json({ msg: "Unauthorized!" });
         if(user.id === soal.userId){
             await Soal.destroy({
                 where: {
                     id: soal.id
                 }
             });
-            fs.unlink(soal.file, (err) => {
-                if (err) {
-                    throw err;
-                }
-            });
+            // fs.unlink(soal.file, (err) => {
+            //     if (err) {
+            //         throw err;
+            //     }
+            // });
             return res.status(201).json({ msg: "Delete Soal Berhasil" });
         }else{
             return res.status(401).json("User bukan pembuat Soal!");
@@ -156,7 +161,7 @@ const getSoal = async (req, res) => {
         const filter = req.query.filter || "";
         const offset = limit * page;
         let response = await Soal.findAll({
-            attributes: ['uuid', 'name', 'about', 'deadline','file'],
+            attributes: ['id','uuid', 'name', 'about', 'deadline','file'],
             where: {
                 name: {
                     [Op.like]: '%' + filter + '%'
@@ -183,15 +188,25 @@ const getSoal = async (req, res) => {
                 
             }
         });
-        
+        let isAnswered
+        const poll = []
+        for(let i=0;i<response.length;i++){
+            isAnswered = await useranswer.count({
+                where : {
+                    [Op.and] : [{
+                        userId : req.user.id
+                    },{
+                        soalId : response[i].id
+                    }]
+                }
+            })
+            poll.push(isAnswered >0 ? 1 : 0 )
+        }
+        // return res.status(200).json(response)
         const totalPage = Math.ceil(count / limit);
-        // console.log(response.length);
-        response.map(function(res){
-            res = process.env.APP_ADDRESS + "/" + res.file
-        })
         return response.length > 0 
-        ? res.status(200).json({pages: page+1, offset: offset, limit: limit, total : response.length, total_pages : totalPage, data : response}) 
-        : res.status(404).json("Materi telah dihapus atau belum dibuat!");
+        ? res.status(200).json({pages: page+1, offset: offset, limit: limit, total : response.length, total_pages : totalPage, userAnswered:poll, data : response}) 
+        : res.status(404).json("Soal telah dihapus atau belum dibuat!");
         
     } catch (error) {
         return res.status(500).json({ msg: error.message });

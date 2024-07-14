@@ -26,19 +26,17 @@ import {
   CTableRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilPencil, cilTrash, cilStorage, cilZoom, cilReload, cilPlus, cilColorBorder, cilArrowThickFromLeft } from '@coreui/icons'
+import { cilPencil, cilTrash, cilStorage, cilZoom, cilReload, cilPlus, cilColorBorder, cilPen } from '@coreui/icons'
 import { Link, useNavigate } from 'react-router-dom'
-import { useSoalPages } from '../../../../hooks/queries'
-import { useDeleteSoal } from '../../../../hooks/mutation'
-import AddAnswer from '../../answer/guru/AddAnswer';
+import { useAnswerPages, useSoalPages } from '../../../../hooks/queries'
+import { useDeleteAnswer, useDeleteSoal } from '../../../../hooks/mutation'
 
-const Soal = () => {
+const Answer = () => {
     const [filter, setFilter] = useState();
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(5);
     const [fieldFilter, setFieldFilter] = useState('');
     const [visible, setVisible] = useState(false);
-    const [id, setId] = useState();
     const navigate = useNavigate()
     
     const handleFilterField = (e) => {
@@ -51,31 +49,25 @@ const Soal = () => {
     const handleFilter = (filter) => {
       setFilter(filter);
     }
-    const { isPending, isError, data: soal, error, isFetching, isPlaceholderData } = useSoalPages(limit,page,filter)
-    const deleteMutation = useDeleteSoal()
+    const { isPending, isError, data: answer, error, isFetching, isPlaceholderData } = useAnswerPages(limit,page,filter)
+    const deleteMutation = useDeleteAnswer()
 
     if (isError) return `Error: ${error.message}`
 
     const handleDelete = (id) => {
       deleteMutation.mutate(id)
       setPage(1)
-      navigate('/guru/soal')
+      navigate('/guru/answer')
     }
-    const handleEdit = (id) => navigate(`/guru/soal/${id}/edit`)
-    const handleDetail = (id) => navigate(`/soal/${id}/detail`)
-    const handleAdd = () => navigate(`/guru/add/soal`)
-
-    const handleAnswer = (id) => navigate(`/add/answer/${id}`)
-    const handleAnswerbySoal = (id) => navigate(`/guru/answer/soal/${id}`)
-
-    // console.log(soal);
+    const handleNilai = (id) => navigate(`/guru/answer/${id}/nilai`)
+    const handleDetail = (id) => navigate(`/answer/${id}/detail`)
   return (
     <CRow>
       <CCol xs={12}>
         <CCard className="mb-4">
           <CCardHeader>
             <div style={{display:'flex'}} className='mt-2'>
-              <h3>Daftar Soal</h3>
+              <h5>Daftar Semua Jawaban</h5>
               <div style={{marginLeft:'auto'}}>
                 <CInputGroup className="mb-3" >
                   <CFormSelect onChange={handleLimit} size='sm'>
@@ -84,11 +76,6 @@ const Soal = () => {
                     <option value="10">10</option>
                     <option value="20">20</option>
                   </CFormSelect>
-                  <CInputGroupText id="basic-addon1" style={{backgroundColor:'#249542'}}>
-                    <CButton className='p-0' onClick={handleAdd} style={{color:'white'}}>
-                      Tambah Data <CIcon icon={cilPlus} size='lg'></CIcon>
-                    </CButton>
-                  </CInputGroupText>
                   <CFormInput aria-label="Username" type='text' name='search' placeholder='Cari : judul' onChange={handleFilterField}/>
                   <CInputGroupText id="basic-addon2">
                     <CButton className='p-0' onClick={() => {handleFilter(fieldFilter,page,limit)}}>
@@ -117,48 +104,27 @@ const Soal = () => {
                 <CTableHead color=''>
                   <CTableRow>
                     <CTableHeaderCell scope="col">#</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Pembuat</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">User</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Soal</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Keterangan</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Deadline</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Status</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Nilai</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Aksi</CTableHeaderCell>
                   </CTableRow>
                 </CTableHead>
                 <CTableBody>
-                    {soal.data?.map((soalContent, index)=>(
-                        <CTableRow key={soalContent.uuid}>
-                            <CTableHeaderCell scope="row">{(index+1)+soal.offset}</CTableHeaderCell>
-                            <CTableDataCell>{soalContent.user.name}</CTableDataCell>
-                            <CTableDataCell>{soalContent.name}</CTableDataCell>
-                            <CTableDataCell>{soalContent.about}</CTableDataCell>
-                            <CTableDataCell>{moment(soalContent.deadline).format("LLLL")}</CTableDataCell>
+                    {answer.data?.map((answerContent, index)=>(
+                        <CTableRow key={answerContent.uuid}>
+                            <CTableHeaderCell scope="row">{(index+1)+answer.offset}</CTableHeaderCell>
+                            <CTableDataCell>{answerContent.user.name}</CTableDataCell>
+                            <CTableDataCell>{answerContent.soal.name}</CTableDataCell>
+                            <CTableDataCell>{answerContent.status}</CTableDataCell>
+                            <CTableDataCell>{answerContent.nilai}</CTableDataCell>
                             <CTableDataCell>
-                                <CButton 
-                                  color="info"  size='sm' 
-                                  className="mb-1 mt-1 px-3 mx-1" 
-                                  style={{color:'white', display: soal.userAnswered[index] ? 'block' : 'none'}}
-                                >
-                                    Sudah <CIcon icon={cilColorBorder} />
-                                </CButton>
-                                <CButton 
-                                  color="success"  size='sm' 
-                                  className="mb-1 mt-1 px-3 mx-1" 
-                                  style={{color:'white',display: soal.userAnswered[index] ? 'none' : 'block'}}  
-                                  onClick={()=> {handleAnswer(soalContent.uuid)}}
-                                >
-                                    Jawab <CIcon icon={cilColorBorder} />
-                                </CButton>
-                                <CButton color="primary" className="mb-1 mt-1 px-3 mx-1"  size='sm' onClick={() => handleDetail(soalContent.uuid)}>
+                                <CButton color="primary" className="mb-1 mt-1 px-3 mx-1" onClick={() => handleDetail(answerContent.uuid)}>
                                     <CIcon icon={cilStorage} />
                                 </CButton>
-                                <CButton color="warning" className="mb-1 mt-1 px-3 mx-1"  size='sm' onClick={() => handleEdit(soalContent.uuid)}>
-                                    <CIcon icon={cilPencil} />
-                                </CButton>
-                                <CButton color="danger" className="mb-1 mt-1 px-3 mx-1"  size='sm' onClick={()=>handleDelete(soalContent.uuid)}>
-                                    <CIcon icon={cilTrash} />
-                                </CButton>
-                                <CButton color="info" className="mb-1 mt-1 px-3 mx-1" size='sm' style={{color:'white'}} onClick={() => handleAnswerbySoal(soalContent.uuid)}>
-                                  List Jawaban <CIcon icon={cilArrowThickFromLeft} />
+                                <CButton color="warning" className="mb-1 mt-1 px-3 mx-1" onClick={() => handleNilai(answerContent.uuid)}>
+                                    Nilai <CIcon icon={cilPen} />
                                 </CButton>
                             </CTableDataCell>
                         </CTableRow>
@@ -167,7 +133,7 @@ const Soal = () => {
               </CTable>
                 <CPagination align="end" style={{marginRight:"40px",marginTop:"2ren",marginLeft:'auto'}}>
                 <ResponsivePagination
-                  total={soal?.total_pages}
+                  total={answer?.total_pages}
                   current={page}
                   onPageChange={(page) => setPage(page)}
                 />
@@ -182,4 +148,4 @@ const Soal = () => {
   )
 }
 
-export default Soal
+export default Answer

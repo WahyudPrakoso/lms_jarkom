@@ -26,19 +26,16 @@ import {
   CTableRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilPencil, cilTrash, cilStorage, cilZoom, cilReload, cilPlus, cilColorBorder, cilArrowThickFromLeft } from '@coreui/icons'
+import { cilPencil, cilTrash, cilStorage, cilZoom, cilReload, cilPlus } from '@coreui/icons'
 import { Link, useNavigate } from 'react-router-dom'
 import { useSoalPages } from '../../../../hooks/queries'
 import { useDeleteSoal } from '../../../../hooks/mutation'
-import AddAnswer from '../../answer/guru/AddAnswer';
 
 const Soal = () => {
     const [filter, setFilter] = useState();
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(5);
     const [fieldFilter, setFieldFilter] = useState('');
-    const [visible, setVisible] = useState(false);
-    const [id, setId] = useState();
     const navigate = useNavigate()
     
     const handleFilterField = (e) => {
@@ -56,19 +53,12 @@ const Soal = () => {
 
     if (isError) return `Error: ${error.message}`
 
-    const handleDelete = (id) => {
-      deleteMutation.mutate(id)
-      setPage(1)
-      navigate('/guru/soal')
-    }
+    const handleDelete = (id) => deleteMutation.mutate(id)
     const handleEdit = (id) => navigate(`/guru/soal/${id}/edit`)
     const handleDetail = (id) => navigate(`/soal/${id}/detail`)
     const handleAdd = () => navigate(`/guru/add/soal`)
 
-    const handleAnswer = (id) => navigate(`/add/answer/${id}`)
-    const handleAnswerbySoal = (id) => navigate(`/guru/answer/soal/${id}`)
 
-    // console.log(soal);
   return (
     <CRow>
       <CCol xs={12}>
@@ -133,32 +123,14 @@ const Soal = () => {
                             <CTableDataCell>{soalContent.about}</CTableDataCell>
                             <CTableDataCell>{moment(soalContent.deadline).format("LLLL")}</CTableDataCell>
                             <CTableDataCell>
-                                <CButton 
-                                  color="info"  size='sm' 
-                                  className="mb-1 mt-1 px-3 mx-1" 
-                                  style={{color:'white', display: soal.userAnswered[index] ? 'block' : 'none'}}
-                                >
-                                    Sudah <CIcon icon={cilColorBorder} />
-                                </CButton>
-                                <CButton 
-                                  color="success"  size='sm' 
-                                  className="mb-1 mt-1 px-3 mx-1" 
-                                  style={{color:'white',display: soal.userAnswered[index] ? 'none' : 'block'}}  
-                                  onClick={()=> {handleAnswer(soalContent.uuid)}}
-                                >
-                                    Jawab <CIcon icon={cilColorBorder} />
-                                </CButton>
-                                <CButton color="primary" className="mb-1 mt-1 px-3 mx-1"  size='sm' onClick={() => handleDetail(soalContent.uuid)}>
+                                <CButton color="primary" className="mb-1 mt-1 px-3 mx-1" onClick={() => handleDetail(soalContent.uuid)}>
                                     <CIcon icon={cilStorage} />
                                 </CButton>
-                                <CButton color="warning" className="mb-1 mt-1 px-3 mx-1"  size='sm' onClick={() => handleEdit(soalContent.uuid)}>
+                                <CButton color="warning" className="mb-1 mt-1 px-3 mx-1" onClick={() => handleEdit(soalContent.uuid)}>
                                     <CIcon icon={cilPencil} />
                                 </CButton>
-                                <CButton color="danger" className="mb-1 mt-1 px-3 mx-1"  size='sm' onClick={()=>handleDelete(soalContent.uuid)}>
+                                <CButton color="danger" className="mb-1 mt-1 px-3 mx-1" onClick={()=>handleDelete(soalContent.uuid)}>
                                     <CIcon icon={cilTrash} />
-                                </CButton>
-                                <CButton color="info" className="mb-1 mt-1 px-3 mx-1" size='sm' style={{color:'white'}} onClick={() => handleAnswerbySoal(soalContent.uuid)}>
-                                  List Jawaban <CIcon icon={cilArrowThickFromLeft} />
                                 </CButton>
                             </CTableDataCell>
                         </CTableRow>
