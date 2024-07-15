@@ -91,14 +91,13 @@ const Login = () => {
               <CCard className="text-white bg-primary py-5" style={{ width: '44%' }}>
                 <CCardBody className="text-center">
                   <div>
-                    <h2>Sign up</h2>
+                    <h2>Pendaftaran</h2>
                     <p>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                      tempor incididunt ut labore et dolore magna aliqua.
+                      ASJE-LEARNING merupakan website pembelajaran yang dapat membantu para pengajar dalam mendistribusikan materi baik file text maupun video serta menguji pemahaman pelajar.
                     </p>
                     <Link to="/register">
                       <CButton color="primary" className="mt-3" active tabIndex={-1}>
-                        Register Now!
+                        Daftar Sekarang!
                       </CButton>
                     </Link>
                   </div>

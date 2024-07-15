@@ -54,7 +54,7 @@ const AppHeader = () => {
         <CHeaderNav className="d-none d-md-flex">
           <CNavItem>
             <CNavLink to="/dashboard" as={NavLink}>
-              LMS JARKOM
+              ASJE-LEARNING
             </CNavLink>
           </CNavItem>
         </CHeaderNav>

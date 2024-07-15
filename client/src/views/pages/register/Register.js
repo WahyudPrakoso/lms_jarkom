@@ -114,7 +114,7 @@ const Register = () => {
                   <p className="text-body-secondary">{err && err}</p>
 
                   <div className="d-grid">
-                    <CButton color="success" onClick={handleRegister} style={{color:'white'}}>Buat Account</CButton>
+                    <CButton color="success" onClick={handleRegister} style={{color:'white'}}>Buat Akun</CButton>
                   </div>
                   <p className="text-body-secondary mt-2">Sudah punya akun ?
                     <Link to="/login">

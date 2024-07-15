@@ -26,34 +26,6 @@ const _nav = [
   },
   {
     component: CNavTitle,
-    name: 'Murid',
-  },
-  {
-    component: CNavItem,
-    name: 'Materi',
-    to: '/murid/materi',
-    icon: <CIcon icon={cilBook} customClassName="nav-icon" />,
-  },
-  {
-    component: CNavItem,
-    name: 'Video',
-    to: '/murid/video',
-    icon: <CIcon icon={cilVideo} customClassName="nav-icon" />,
-  },
-  {
-    component: CNavItem,
-    name: 'Soal',
-    to: '/murid/soal',
-    icon: <CIcon icon={cilTask} customClassName="nav-icon" />,
-  },
-  {
-    component: CNavItem,
-    name: 'Jawaban',
-    to: '/answer/me',
-    icon: <CIcon icon={cilSchool} customClassName="nav-icon" />,
-  },
-  {
-    component: CNavTitle,
     name: 'Guru',
   },
   {
@@ -95,12 +67,6 @@ const _nav = [
   {
     component: CNavTitle,
     name: 'Akun',
-  },
-  {
-    component: CNavItem,
-    name: 'Login',
-    to: '/login',
-    icon: <CIcon icon={cilGolf} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,

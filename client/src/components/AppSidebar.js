@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 
 import {
   CCloseButton,
+  CImage,
   CSidebar,
   CSidebarBrand,
   CSidebarFooter,
@@ -39,8 +40,8 @@ const AppSidebar = () => {
     >
       <CSidebarHeader className="border-bottom">
         <CSidebarBrand to="/">
-          <CIcon customClassName="sidebar-brand-full" icon={logo} height={32} />
-          <CIcon customClassName="sidebar-brand-narrow" icon={sygnet} height={32} />
+          <CImage customClassName="sidebar-brand-full" fluid src='./logo.png' alt='logo'/>
+          {/* <CImage customClassName="sidebar-brand-narrow" fluid src='./public/smlogo.png' alt='logo'/> */}
         </CSidebarBrand>
         <CCloseButton
           className="d-lg-none"
