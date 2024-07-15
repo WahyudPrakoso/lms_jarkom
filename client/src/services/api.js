@@ -134,3 +134,12 @@ export async function editAnswer(newData) {
 export async function delAnswer(id) {
     return (await makeRequest.delete(`/answer/${id}`)).data
 }
+
+export async function getDashboard() {
+    return (await makeRequest.get(`/dashboard`)).data
+}
+
+export const getUserPages = async (limit=5,pageParam = 1,filter='') => {
+    const response = await makeRequest.get(`/user?page=${pageParam}&limit=${limit}&filter=${filter}`)
+    return response.data
+}

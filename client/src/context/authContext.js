@@ -6,7 +6,9 @@ export const AuthContextProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(
     JSON.parse(localStorage.getItem("user")) || null
   );
-
+  const [islogin, setislogin] = useState(
+    JSON.parse(localStorage.getItem("islogin")) || false
+  );
   try{
     const login = async (inputs) => {
       const res = await makeRequest.post("/login", inputs, {
@@ -14,14 +16,16 @@ export const AuthContextProvider = ({ children }) => {
       });
 
       setCurrentUser(res.data)
+      setislogin(true)
     };
 
     useEffect(() => {
       localStorage.setItem("user", JSON.stringify(currentUser));
+      localStorage.setItem("islogin", JSON.stringify(islogin));
     }, [currentUser]);
-
+    
     return (
-      <AuthContext.Provider value={{ currentUser, login }}>
+      <AuthContext.Provider value={{ currentUser, islogin, login }}>
         {children}
       </AuthContext.Provider>
     );

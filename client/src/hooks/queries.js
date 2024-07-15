@@ -6,10 +6,12 @@ import {
   getAnswerPages, 
   getAnswerPagesMe, 
   getAnswerPagesSoal, 
+  getDashboard, 
   getMateri, 
   getMateriPages, 
   getPDF, getSoal, 
   getSoalPages, 
+  getUserPages, 
   getVideo, 
   getVideoPages } from '../services/api'
 
@@ -105,4 +107,20 @@ export function useAnswerById(id){
     queryKey: ['answerbyid', id],
     queryFn: () => getAnswer(id),
   })
+}
+
+export function useDashboard(){
+  return useQuery({
+    queryKey: ['dashboard'],
+    queryFn: () => getDashboard(),
+  })
+}
+
+export function useUserPages(limit,page,filter) {
+  // console.log("hook =========> page " +page+" limit : "+limit+" filter : "+filter);
+  return useQuery({
+    queryKey: ['user', {limit,page,filter}],
+    queryFn: () => getUserPages(limit,page,filter),
+    placeholderData: keepPreviousData,
+  });
 }

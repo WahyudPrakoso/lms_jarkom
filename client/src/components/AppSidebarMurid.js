@@ -11,13 +11,13 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 
-import { AppSidebarNav } from './AppSidebarNav'
+import { AppSidebarNav } from './AppSidebarNavMurid'
 
 import { logo } from 'src/assets/brand/logo'
 import { sygnet } from 'src/assets/brand/sygnet'
 
 // sidebar nav config
-import navigation from '../_nav'
+import navigation from '../_navMurid'
 import { Route, Routes } from 'react-router-dom'
 import RequireAuth from './RequireAuth'
 

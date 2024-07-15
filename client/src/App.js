@@ -1,10 +1,13 @@
-import React, { Suspense, useEffect } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import { HashRouter, Route, Routes } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
 
 import { CSpinner, useColorModes } from '@coreui/react'
 import './scss/style.scss'
+import Missing from './components/Missing'
+import useAuth from './hooks/useAuth'
+import Logout from './components/Logout'
 
 // Containers
 const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'))
@@ -35,7 +38,6 @@ const App = () => {
 
     setColorMode(storedTheme)
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
-
   return (
     <QueryClientProvider client={queryClient}>
       <HashRouter>
@@ -48,10 +50,12 @@ const App = () => {
         >
           <Routes>
             <Route exact path="/login" name="Login Page" element={<Login />} />
+            <Route exact path="/logout" name="Logout" element={<Logout />} />
             <Route exact path="/register" name="Register Page" element={<Register />} />
             <Route exact path="/404" name="Page 404" element={<Page404 />} />
             <Route exact path="/500" name="Page 500" element={<Page500 />} />
             <Route path="*" name="Home" element={<DefaultLayout />} />
+            {/* <Route path="*" name="Home" element={<Missing />} /> */}
           </Routes>
         </Suspense>
       </HashRouter>

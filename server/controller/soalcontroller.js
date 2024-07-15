@@ -204,10 +204,7 @@ const getSoal = async (req, res) => {
         }
         // return res.status(200).json(response)
         const totalPage = Math.ceil(count / limit);
-        return response.length > 0 
-        ? res.status(200).json({pages: page+1, offset: offset, limit: limit, total : response.length, total_pages : totalPage, userAnswered:poll, data : response}) 
-        : res.status(404).json("Soal telah dihapus atau belum dibuat!");
-        
+        return res.status(200).json({pages: page+1, offset: offset, limit: limit, total : response.length, total_pages : totalPage, userAnswered:poll, data : response}) 
     } catch (error) {
         return res.status(500).json({ msg: error.message });
     }
@@ -227,9 +224,7 @@ const getSoalById = async (req, res) => {
                 }
             ]
         });
-        return response 
-        ? res.status(200).json(response) 
-        : res.status(404).json("Soal telah dihapus atau belum dibuat!");
+        return res.status(200).json(response) 
     } catch (error) {
         return res.status(500).json({ msg: error.message });
     }

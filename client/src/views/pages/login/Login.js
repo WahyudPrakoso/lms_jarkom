@@ -38,14 +38,9 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      // console.log(inputs);
       await login(inputs);
-      // const { currentUser } = useContext(AuthContext);
-      // const {currentUser} =useContext(AuthContext);
-      // console.log("success");
-      navigate("/")
+      window.location.href = "/";
     } catch (err) {
-        // console.log(err.response.data.msg);
         setErr(err.response.data.msg);
     }
   };

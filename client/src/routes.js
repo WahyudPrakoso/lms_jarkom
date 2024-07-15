@@ -25,6 +25,7 @@ const EditAnswer= React.lazy(() => import('./views/base/answer/guru/EditAnswer')
 const NilaiAnswer= React.lazy(() => import('./views/base/answer/guru/NilaiAnswer'))
 const DetailAnswer= React.lazy(() => import('./views/base/answer/DetailAnswer'))
 const AnswerSoal= React.lazy(() => import('./views/base/answer/guru/AnswerbySoal'))
+const User= React.lazy(() => import('./views/base/User'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -55,6 +56,7 @@ const routes = [
   { path: '/guru/answer/:id/edit', name: 'Edit Jawaban', element: EditAnswer},
   { path: '/guru/answer/:id/nilai', name: 'Edit Jawaban', element: NilaiAnswer},
   { path: '/guru/answer/soal/:id', name: 'Edit Jawaban', element: AnswerSoal},
+  { path: '/user', name: 'User', element: User},
 ]
 
 export default routes

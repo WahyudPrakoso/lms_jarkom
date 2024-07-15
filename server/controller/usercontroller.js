@@ -5,7 +5,37 @@ const dotenv = require("dotenv");
 const path = require("path");
 const { v4: uuidv4 } = require("uuid");
 const multer = require("multer");
+const materi = require("../model/materimodel.js");
+const soal = require("../model/soalmodel.js");
+const useranswer = require("../model/useranswermodel.js");
+const { Op } = require("sequelize");
 dotenv.config().parsed;
+
+const dashboard = async (req, res) => {
+    try {
+        const user = await User.findOne({
+            where : {
+                id : req.user.id
+            }
+        })
+        const jumUser = await User.count()
+        const jumMateri = await materi.count()
+        const jumSoal = await soal.count()
+        if (user.role === '0105'){
+            const jumJawaban = await useranswer.count()
+            return res.status(200).json({jumUser, jumJawaban, jumMateri, jumSoal})
+        }else{
+            const jumJawaban = await useranswer.count({
+                where : {
+                    userId : user.id
+                }
+            })
+            return res.status(200).json({jumUser,jumJawaban, jumMateri, jumSoal})
+        }
+    }catch(err){
+        return res.status(500).json(err.message)
+    }
+}
 
 const login = async (req, res) => {
     // console.log(req.body);
@@ -103,33 +133,6 @@ const logout = async (req, res) => {
         res.status(500).send({ error: e.message || e.toString() })
     }
 }
-// const logout = async (req, res) => {
-    //     // const refreshToken = req.cookies.refreshToken;
-//     const { id } = req.body
-//     if (!id || id == "") return res.sendStatus(404).json({ msg: "data tidak ketemu" });
-//     const user = await User.findOne({
-//         where: {
-//             id: id
-//         }
-//     });
-//     if (!user) return res.sendStatus(404).json({ msg: "data tidak ditemukan" });
-//     // if (!user.refresh_token || user.refresh_token == "") return res.sendStatus(404).json({ msg: "mohon login ke akun anda" });
-//     // console.log("wes "+user.id);
-//     // const id = user.id;
-//     await User.update({ refreshToken: null }, {
-//         where: {
-//             id: id
-//         }
-//     });
-//     // console.log(id);a
-//     // res.clearCookie('refreshToken');
-//     // console.log("asdasd");
-//     // req.session.destroy((err)=>{
-    //     //     if(err) return res.status(400).json({msg : "tidak dapat logout hiya hiya"});
-//     //     res.status(200).json({msg : "anda telah logout"});
-//     // })
-//     res.status(200).json({ msg: "anda berhasil logout" });
-// }
 
 const createUser = async (req, res) => {
     
@@ -313,13 +316,35 @@ const deleteUser = async (req, res) => {
 
 const getUser = async (req, res) => {
     try {
+        const page = parseInt(req.query.page)-1 || 0;
+        const limit = parseInt(req.query.limit) || 5;
+        const filter = req.query.filter || "";
+        const offset = limit * page;
         let response = await User.findAll({
             attributes: ['uuid', 'name', 'email', 'no_hp', 'role'],
+            where: {
+                name: {
+                    [Op.like]: '%' + filter + '%'
+                }
+                
+            },
             order: [
                 ['createdAt', 'DESC']
-            ]
+            ],
+            offset: offset,
+            limit: limit,
         });
-       return res.status(200).json(response);
+        let count = await User.count({
+            where: {
+                name: {
+                    [Op.like]: '%' + filter + '%'
+                }
+                
+            }
+        });
+        const totalPage = Math.ceil(count / limit);
+        return res.status(200).json({pages: page+1, offset: offset, limit: limit, total : response.length, total_pages : totalPage, data : response}) 
+
     } catch (error) {
        return res.status(500).json(error.message);
     }
@@ -351,5 +376,6 @@ module.exports = {
     updateUser,
     deleteUser,
     getUser,
-    getUserById
+    getUserById,
+    dashboard
 }

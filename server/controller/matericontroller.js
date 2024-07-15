@@ -191,9 +191,8 @@ const getMateri = async (req, res) => {
         // response.map(function(res){
         //     res = process.env.APP_ADDRESS + "/" + res.file
         // })
-        return response.length > 0 
-        ? res.status(200).json({pages: page+1, offset: offset, limit: limit, total : response.length, total_pages : totalPage, data : response}) 
-        : res.status(404).json("Materi telah dihapus atau belum dibuat!");
+        return res.status(200).json({pages: page+1, offset: offset, limit: limit, total : response.length, total_pages : totalPage, data : response}) 
+
     } catch (error) {
         return res.status(500).json({ msg: error.message });
     }
@@ -213,9 +212,7 @@ const getMateriById = async (req, res) => {
                 }
             ]
         });
-        return response 
-        ? res.status(200).json(response) 
-        : res.status(404).json("Materi telah dihapus atau belum dibuat!");
+        return res.status(200).json(response) 
     } catch (error) {
         return res.status(500).json({ msg: error.message });
     }
