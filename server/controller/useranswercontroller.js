@@ -44,7 +44,6 @@ const uploadFile = multer({
 
 const createUserAnswer = async (req, res) => {
     const {file } = req.body
-    console.log("=============================================+"+file);
     const user = await User.findOne({
         where: {
             id: req.user.id

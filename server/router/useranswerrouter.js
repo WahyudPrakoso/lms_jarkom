@@ -5,7 +5,7 @@ const {auth, adminOnly} = require("../middleware/auth.js");
 
 const router = express.Router(); 
 
-router.post('/answer/:id',auth, adminOnly, createUserAnswer);
+router.post('/answer/:id',auth, createUserAnswer);
 router.patch('/answer/nilai/:id',auth, adminOnly, updateNilaiUserAnswer);
 router.get('/answer' , auth, adminOnly,getUserAnswer);
 router.get('/answer/me',auth, getonlyUserAnswer);

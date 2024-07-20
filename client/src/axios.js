@@ -6,6 +6,12 @@ export const makeRequest = axios.create({
   withCredentials: true,
 });
 
+// export const makeRequest = axios.create({
+//   baseURL: 'http://localhost:5000',
+//   withCredentials: true,
+// });
+
+
 export const makeRequestUpload = axios.create({
   baseURL: server,
   withCredentials: true,

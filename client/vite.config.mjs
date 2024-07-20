@@ -48,6 +48,9 @@ export default defineConfig(() => {
       proxy: {
         // https://vitejs.dev/config/server-options.html
       },
-    },
+    },  
+    preview:{
+      port : 4000
+    }
   }
 })

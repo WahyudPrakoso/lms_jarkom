@@ -6,10 +6,17 @@ const cookieParser = require("cookie-parser");
 const app = express();
 const httpServer = createServer(app);
 dotenv.config().parsed;
+
+// const db = require('./config/database.js')
+// async () => {
+//     await db.sync({force : true})
+// }
 //model
-// const soal = require('./model/soalmodel.js');
-// const vidmateri = require('./model/vidmaterimodel.js');
-// const useranswer = require('./model/useranswermodel.js');
+const user = require('./model/usermodel.js');
+const soal = require('./model/soalmodel.js');
+const vidmateri = require('./model/vidmaterimodel.js');
+const useranswer = require('./model/useranswermodel.js');
+const materi = require('./model/materimodel.js');
 //routes
 const UserRoute = require("./router/userrouter.js");
 const MateriRoute = require("./router/materirouter.js");
@@ -18,7 +25,7 @@ const SoalRoute = require("./router/soalrouter.js");
 const UserAnswer = require("./router/useranswerrouter.js");
 
 //frontend address allowed in cors
-var whitelist = [process.env.CORS_ORIGIN_LOCAL, process.env.CORS_ORIGIN_WEB, `http://localhost:5173/`]
+var whitelist = [process.env.CORS_ORIGIN_LOCAL, process.env.CORS_ORIGIN_WEB]
 var corsOptions = {
     credentials: true,
     origin: function (origin, callback) {
@@ -32,8 +39,18 @@ var corsOptions = {
         }
     }
 }
+
 app.use(cors(corsOptions));
-// app.use(cors());
+// app.use(cors({
+//     'Access-Control-Allow-Origin': '*'
+// }));
+
+//sync table model
+user.sync();
+soal.sync();
+vidmateri.sync();
+materi.sync();
+useranswer.sync();
 
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -44,11 +61,8 @@ app.use(VidMateriRoute);
 app.use(SoalRoute);
 app.use(UserAnswer);
 app.use('/storage', express.static('./storage/'));
-// soal.sync({force : true});
-// vidmateri.sync({force : true});
-// useranswer.sync({force : true});
-var server = httpServer.listen(process.env.APP_PORT, () => {
+httpServer.listen(process.env.APP_PORT, () => {
     console.log('Server up and running on port ' + process.env.APP_PORT);
 });
 
-server.setTimeout(500000)
+// server.setTimeout(500000)
