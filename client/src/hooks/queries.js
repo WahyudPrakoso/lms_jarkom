@@ -11,6 +11,7 @@ import {
   getMateriPages, 
   getPDF, getSoal, 
   getSoalPages, 
+  getUser, 
   getUserPages, 
   getVideo, 
   getVideoPages } from '../services/api'
@@ -123,4 +124,11 @@ export function useUserPages(limit,page,filter) {
     queryFn: () => getUserPages(limit,page,filter),
     placeholderData: keepPreviousData,
   });
+}
+
+export function useUserById(id){
+  return useQuery({
+    queryKey: ['userbyid', id],
+    queryFn: () => getUser(id),
+  })
 }

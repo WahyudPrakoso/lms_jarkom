@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import ResponsivePagination from 'react-responsive-pagination'
+import ShowMoreText from "react-show-more-text";
 import moment from 'moment-timezone';
 import 'moment/dist/locale/id'
 moment.locale('id')
@@ -45,6 +46,7 @@ const Soal = () => {
       setFieldFilter(e.target.value)
     }
     const handleLimit = (e) => {
+      setPage(1)
       setLimit(e.target.value)
     }
 
@@ -123,7 +125,19 @@ const Soal = () => {
                             <CTableHeaderCell scope="row">{(index+1)+soal.offset}</CTableHeaderCell>
                             <CTableDataCell>{soalContent.user.name}</CTableDataCell>
                             <CTableDataCell>{soalContent.name}</CTableDataCell>
-                            <CTableDataCell>{soalContent.about}</CTableDataCell>
+                            <CTableDataCell width={'35%'}>
+                              <ShowMoreText
+                                  lines={3}
+                                  more='Tampilkan Detail'
+                                  less='Kecilkan'
+                                  anchorClass=''
+                                  className=''
+                                  expanded={false}
+                                  truncatedEndingComponent={"..... "}
+                              >
+                                {soalContent.about}
+                              </ShowMoreText>
+                            </CTableDataCell>
                             <CTableDataCell>{moment(soalContent.deadline).format("LLLL")}</CTableDataCell>
                             <CTableDataCell>
                                 <CButton 

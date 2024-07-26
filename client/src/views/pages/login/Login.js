@@ -29,12 +29,6 @@ const Login = () => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
   const { login } = useContext(AuthContext);
-
-      /*NOTE BOUT ROLES
-        MEMBER = 1711
-        ADMIN = 2012
-        
-        */
   const handleLogin = async (e) => {
     e.preventDefault();
     try {

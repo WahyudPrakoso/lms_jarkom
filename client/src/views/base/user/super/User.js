@@ -10,6 +10,7 @@ import {
   CFormSelect,
   CInputGroup,
   CInputGroupText,
+  CLink,
   CPagination,
   CPaginationItem,
   CRow,
@@ -23,11 +24,10 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilPencil, cilTrash, cilStorage, cilZoom, cilReload, cilPlus } from '@coreui/icons'
-import { Link, useNavigate } from 'react-router-dom'
-import { fetchMateri, useMateriPages } from '../../../../hooks/queries'
-import { useDeleteMateri } from '../../../../hooks/mutation'
+import { useNavigate } from 'react-router-dom'
+import { useUserPages } from '../../../../hooks/queries'
 
-const Soal = () => {
+const User = () => {
     const [filter, setFilter] = useState();
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(5);
@@ -42,22 +42,24 @@ const Soal = () => {
       setLimit(e.target.value)
     }
 
+    const handleEdit = (id) => navigate(`/admin/user/${id}/edit`)
+    const handleDetail = (id) => navigate(`/user/${id}/detail`)
+    const handleAdd = () => navigate(`/admin/add/user`)
+
     const handleFilter = (filter) => {
       // console.log("materi ========> page " +page+" limit : "+limit+" filter : "+filter);
       setFilter(filter);
     }
-    const { isPending, isError, data: materi, error, isFetching, isPlaceholderData } = useMateriPages(limit,page,filter)
+    const { isPending, isError, data: user, error, isFetching, isPlaceholderData } = useUserPages(limit,page,filter)
 
     if (isError) return `Error: ${error.message}`
-
-    const handleDetail = (id) => navigate(`/materi/${id}/detail`)
   return (
     <CRow>
       <CCol xs={12}>
         <CCard className="mb-4">
           <CCardHeader>
             <div style={{display:'flex'}} className='mt-2'>
-              <h3>Daftar materi</h3>
+              <h3>Daftar User</h3>
               <div style={{marginLeft:'auto'}}>
                 <CInputGroup className="mb-3" >
                   <CFormSelect onChange={handleLimit} size='sm'>
@@ -66,6 +68,11 @@ const Soal = () => {
                     <option value="10">10</option>
                     <option value="20">20</option>
                   </CFormSelect>
+                  <CInputGroupText id="basic-addon1" style={{backgroundColor:'#249542'}}>
+                    <CButton className='p-0' onClick={handleAdd} style={{color:'white'}}>
+                      Tambah Data <CIcon icon={cilPlus} size='lg'></CIcon>
+                    </CButton>
+                  </CInputGroupText>
                   <CFormInput aria-label="Username" type='text' name='search' placeholder='Cari : judul' onChange={handleFilterField}/>
                   <CInputGroupText id="basic-addon2">
                     <CButton className='p-0' onClick={() => {handleFilter(fieldFilter,page,limit)}}>
@@ -95,22 +102,24 @@ const Soal = () => {
                 <CTableHead color=''>
                   <CTableRow>
                     <CTableHeaderCell scope="col">#</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Pembuat</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Judul</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Keterangan</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Nama</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Email</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Kontak</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Role</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Aksi</CTableHeaderCell>
                   </CTableRow>
                 </CTableHead>
                 <CTableBody>
-                    {materi.data?.map((materiContent, index)=>(
-                        <CTableRow key={materiContent.uuid}>
-                            <CTableHeaderCell scope="row">{(index+1)+materi.offset}</CTableHeaderCell>
-                            <CTableDataCell>{materiContent.user.name}</CTableDataCell>
-                            <CTableDataCell>{materiContent.name}</CTableDataCell>
-                            <CTableDataCell>{materiContent.about}</CTableDataCell>
+                    {user.data?.map((userContent, index)=>(
+                        <CTableRow key={userContent.uuid}>
+                            <CTableHeaderCell scope="row">{(index+1)+user.offset}</CTableHeaderCell>
+                            <CTableDataCell>{userContent.name}</CTableDataCell>
+                            <CTableDataCell>{userContent.email}</CTableDataCell>
+                            <CTableDataCell>{userContent.no_hp}</CTableDataCell>
+                            <CTableDataCell>{userContent.role}</CTableDataCell>
                             <CTableDataCell>
-                                <CButton color="primary" className="mb-1 mt-1 px-3 mx-1" onClick={() => handleDetail(materiContent.uuid)}>
-                                    <CIcon icon={cilStorage} />
+                                <CButton color="warning" className="mb-1 mt-1 px-3 mx-1"  size='sm' onClick={() => handleEdit(userContent.uuid)}>
+                                    Edit <CIcon icon={cilPencil} />
                                 </CButton>
                             </CTableDataCell>
                         </CTableRow>
@@ -119,12 +128,11 @@ const Soal = () => {
               </CTable>
                 <CPagination align="end" style={{marginRight:"40px",marginTop:"2ren",marginLeft:'auto'}}>
                 <ResponsivePagination
-                  total={materi?.total_pages}
+                  total={user?.total_pages}
                   current={page}
                   onPageChange={(page) => setPage(page)}
                 />
               </CPagination>
-              
             </>       
           )}
           {isFetching ? <span> Loading...</span> : null}{' '}
@@ -135,4 +143,4 @@ const Soal = () => {
   )
 }
 
-export default Soal
+export default User

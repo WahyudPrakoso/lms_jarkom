@@ -68,7 +68,8 @@ const verifyEmailUser = async(req,res,next) => {
 }
 
 const adminOnly = async(req,res,next) => {
-    if(req.user.role !== '0105' || req.user.role === '1711') return res.status(403).json({msg:"akses dilarang!!"});
+    const arr = ["0105","12474"];
+    if(!arr.includes(req.user.role)) return res.status(403).json({msg:"akses dilarang!!"});
     next();
 }
 

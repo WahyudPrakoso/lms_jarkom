@@ -94,7 +94,7 @@ const updateUserAnswer = async (req, res) => {
             }
         });
         if (!user) return res.status(404).json({ msg: "User tidak ditemukan" });
-        if(user.role === '0105' || user.id === userAnswer.userId){
+        // if(user.role === '0105' || user.id === userAnswer.userId){
             await UserAnswer.update({
                 file: file
             }, {
@@ -108,10 +108,10 @@ const updateUserAnswer = async (req, res) => {
             //         throw err;
             //     }
             // });
-            return res.status(201).json({ msg: "Update jawaban Berhasil" });
-        }else{
-            return res.status(401).json("User bukan pembuat jawaban!");
-        }
+            // return res.status(201).json({ msg: "Update jawaban Berhasil" });
+        // }else{
+            // return res.status(401).json("User bukan pembuat jawaban!");
+        // }
         
     } catch (error) {
         return res.status(400).json({ msg: error.message });
@@ -131,7 +131,7 @@ const deleteUserAnswer = async (req, res) => {
             }
         });
         if (!user) return res.status(404).json({ msg: "User tidak ditemukan" });
-        if(user.role === '0105' || user.id === userAnswer.userId){
+        // if(user.role === '0105' || user.id === userAnswer.userId){
             await UserAnswer.destroy({
                 where: {
                     id: userAnswer.id
@@ -143,9 +143,9 @@ const deleteUserAnswer = async (req, res) => {
             //     }
             // });
             return res.status(201).json({ msg: "Delete jawaban Berhasil" });
-        }else{
-            return res.status(401).json("User bukan pembuat UserAnswer!");
-        }
+        // }else{
+        //     return res.status(401).json("User bukan pembuat UserAnswer!");
+        // }
         
     } catch (error) {
         res.status(500).json({ msg: error.message });

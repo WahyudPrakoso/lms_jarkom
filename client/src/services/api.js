@@ -143,3 +143,13 @@ export const getUserPages = async (limit=5,pageParam = 1,filter='') => {
     const response = await makeRequest.get(`/user?page=${pageParam}&limit=${limit}&filter=${filter}`)
     return response.data
 }
+export async function getUser(id) {
+    return (await makeRequest.get(`/user/${id}`)).data
+}
+export async function createUser(newData) {
+    return (await makeRequest.post(`/user`, newData)).data
+}
+
+export async function editUser(newData) {
+    return (await makeRequest.patch(`/user/${newData.id}`,newData)).data
+}

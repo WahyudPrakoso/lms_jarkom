@@ -5,6 +5,7 @@ import AppHeader from './AppHeader'
 import AppHeaderDropdown from './header/AppHeaderDropdown'
 import AppSidebar from './AppSidebar'
 import AppSidebarMurid from './AppSidebarMurid'
+import AppSidebarSuper from './AppSidebarSuper'
 import DocsCallout from './DocsCallout'
 import DocsLink from './DocsLink'
 import DocsExample from './DocsExample'
@@ -19,5 +20,6 @@ export {
   DocsCallout,
   DocsLink,
   DocsExample,
-  AppSidebarMurid
+  AppSidebarMurid,
+  AppSidebarSuper
 }

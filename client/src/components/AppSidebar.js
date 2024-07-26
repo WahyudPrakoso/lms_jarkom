@@ -40,8 +40,7 @@ const AppSidebar = () => {
     >
       <CSidebarHeader className="border-bottom">
         <CSidebarBrand to="/">
-          <CImage customClassName="sidebar-brand-full" fluid src='./logo.png' alt='logo'/>
-          {/* <CImage customClassName="sidebar-brand-narrow" fluid src='./public/smlogo.png' alt='logo'/> */}
+          <CImage fluid src='./logo.png' alt='logo'/>
         </CSidebarBrand>
         <CCloseButton
           className="d-lg-none"

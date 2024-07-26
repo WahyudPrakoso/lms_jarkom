@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { AppContent, AppSidebar, AppFooter, AppHeader, AppSidebarMurid } from '../components/index'
 import { Navigate, useNavigate } from 'react-router-dom';
+import AppSidebarSuper from '../components/AppSidebarSuper';
 
 const DefaultLayout = () => {
   const [currentUser, setCurrentUser] = useState(
@@ -9,11 +10,10 @@ const DefaultLayout = () => {
   const [islogin, setislogin] = useState(
     JSON.parse(localStorage.getItem("islogin")) || null
   );
-  const navigate = useNavigate()
   const layout = () => {
     return (
     <div>
-      {currentUser.role === '0105' ? <AppSidebar /> : <AppSidebarMurid />}
+      {currentUser.role === '12474' ? <AppSidebarSuper/> : currentUser.role === '0105' ? <AppSidebar /> : <AppSidebarMurid />}
       <div className="wrapper d-flex flex-column min-vh-100">
         <AppHeader />
         <div className="body flex-grow-1">

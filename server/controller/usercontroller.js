@@ -138,7 +138,7 @@ const createUser = async (req, res) => {
     
     try {
         const { name, email, password, confpassword, no_hp, code } = req.body;
-        // console.log(req.body)
+        const numId = '+62';
         const isEmailused = await User.count({
             where: {
                 email: email
@@ -148,21 +148,16 @@ const createUser = async (req, res) => {
             if (password !== confpassword) return res.status(400).json("Password dan Confirm Password tidak cocok");
         const hashPassword = await argon2.hash(password);
         let verifyEmail = Math.floor(100000 + Math.random() * 900000);
-        /*NOTE BOUT ROLES
-        Murid = 1711
-        Guru = 0105
-        
-        */
         const role = ["1711","0105"];
         let kode = code
+        if(code === '12474') kode = '1711'
         if(!kode || !role.includes(kode)) kode = "1711";
-        // if(!role.includes(kode)) return res.status(404).json("tidak ditemukan kode yang cocok")
  
         await User.create({
             uuid: uuidv4(),
             name: name,
             email: email,
-            no_hp: no_hp,
+            no_hp: numId+no_hp,
             password: hashPassword,
             role: kode,
             is_verified: false,
@@ -250,6 +245,7 @@ const updateAvatar = async (req, res) => {
 }
 const updateUser = async (req, res) => {
     try {
+        if(req.user.role !== '12474') return res.status(400).json({ msg: "Akses dilarang !!" });
         const user = await User.findOne({
             where: {
                 uuid: req.params.id
@@ -258,6 +254,7 @@ const updateUser = async (req, res) => {
         if (!user) return res.status(404).json({ msg: "user tidak ditemukan" });
         // return res.json(user)
         const { name, email, password, confpassword, no_hp } = req.body;
+        const numId = '+62';
         let hashPassword;
         if (!password || !confpassword) {
             hashPassword = user.password;
@@ -275,7 +272,7 @@ const updateUser = async (req, res) => {
                 name: name,
                 email: email,
                 password: hashPassword,
-                no_hp: no_hp
+                no_hp: numId + no_hp
             }, {
                 where: {
                     id: user.id
@@ -292,6 +289,7 @@ const updateUser = async (req, res) => {
 }
 const deleteUser = async (req, res) => {
     try {
+        if(req.user.role !== '12474') return res.status(400).json({ msg: "Akses dilarang !!" });
         const user = await User.findOne({
             where: {
                 uuid: req.params.id
@@ -323,10 +321,16 @@ const getUser = async (req, res) => {
         let response = await User.findAll({
             attributes: ['uuid', 'name', 'email', 'no_hp', 'role'],
             where: {
-                name: {
-                    [Op.like]: '%' + filter + '%'
-                }
-                
+                [Op.and] : [{
+                    name: {
+                        [Op.like]: '%' + filter + '%'
+                    }
+                    },{
+                        role : {
+                            [Op.ne] : '12474'
+                        }
+                    }
+                ]
             },
             order: [
                 ['createdAt', 'DESC']
@@ -336,9 +340,16 @@ const getUser = async (req, res) => {
         });
         let count = await User.count({
             where: {
-                name: {
-                    [Op.like]: '%' + filter + '%'
-                }
+                [Op.and] : [{
+                    name: {
+                        [Op.like]: '%' + filter + '%'
+                    }
+                    },{
+                        role : {
+                            [Op.ne] : '12474'
+                        }
+                    }
+                ]
                 
             }
         });

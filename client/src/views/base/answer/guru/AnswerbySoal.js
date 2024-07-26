@@ -42,6 +42,7 @@ const AnswerBySoal = () => {
       setFieldFilter(e.target.value)
     }
     const handleLimit = (e) => {
+      setPage(1)
       setLimit(e.target.value)
     }
 

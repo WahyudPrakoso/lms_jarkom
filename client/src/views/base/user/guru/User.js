@@ -25,9 +25,9 @@ import {
 import CIcon from '@coreui/icons-react'
 import { cilPencil, cilTrash, cilStorage, cilZoom, cilReload, cilPlus } from '@coreui/icons'
 import { useNavigate } from 'react-router-dom'
-import { useUserPages } from '../../hooks/queries'
+import { useUserPages } from '../../../../hooks/queries'
 
-const VidMateri = () => {
+const User = () => {
     const [filter, setFilter] = useState();
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(5);
@@ -38,6 +38,7 @@ const VidMateri = () => {
       setFieldFilter(e.target.value)
     }
     const handleLimit = (e) => {
+      setPage(1)
       setLimit(e.target.value)
     }
 
@@ -63,13 +64,6 @@ const VidMateri = () => {
                     <option value="10">10</option>
                     <option value="20">20</option>
                   </CFormSelect>
-                  <CInputGroupText id="basic-addon1" style={{backgroundColor:'#249542'}}>
-                    <CLink to="/register">
-                        <CButton className='p-0' style={{color:'white'}}>
-                            Tambah Data <CIcon icon={cilPlus} size='lg'></CIcon>
-                        </CButton>
-                    </CLink>
-                  </CInputGroupText>
                   <CFormInput aria-label="Username" type='text' name='search' placeholder='Cari : judul' onChange={handleFilterField}/>
                   <CInputGroupText id="basic-addon2">
                     <CButton className='p-0' onClick={() => {handleFilter(fieldFilter,page,limit)}}>
@@ -134,4 +128,4 @@ const VidMateri = () => {
   )
 }
 
-export default VidMateri
+export default User

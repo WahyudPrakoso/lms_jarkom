@@ -8,6 +8,7 @@ import {
   cilSchool,
   cilSpeedometer,
   cilTask,
+  cilUser,
   cilVideo,
 } from '@coreui/icons'
 import { CNavItem, CNavTitle } from '@coreui/react'
@@ -25,24 +26,24 @@ const _nav = [
   },
   {
     component: CNavTitle,
-    name: 'Murid',
+    name: 'Guru',
   },
   {
     component: CNavItem,
     name: 'Materi',
-    to: '/murid/materi',
+    to: '/guru/materi',
     icon: <CIcon icon={cilBook} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
     name: 'Video',
-    to: '/murid/video',
+    to: '/guru/video',
     icon: <CIcon icon={cilVideo} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
     name: 'Soal',
-    to: '/murid/soal',
+    to: '/admin/soal',
     icon: <CIcon icon={cilTask} customClassName="nav-icon" />,
   },
   {
@@ -50,6 +51,18 @@ const _nav = [
     name: 'Jawaban Saya',
     to: '/answer/me',
     icon: <CIcon icon={cilSchool} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Semua Jawaban',
+    to: '/guru/answer/',
+    icon: <CIcon icon={cilListRich} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'User',
+    to: '/admin/user',
+    icon: <CIcon icon={cilUser} customClassName="nav-icon" />,
   },
   {
     component: CNavTitle,

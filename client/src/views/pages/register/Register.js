@@ -12,7 +12,7 @@ import {
   CRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilBadge, cilLockLocked, cilPhone, cilUser } from '@coreui/icons'
+import { cifId, cilBadge, cilLockLocked, cilPhone, cilUser } from '@coreui/icons'
 import {makeRequest} from '../../../axios'
 import { Link, useNavigate } from 'react-router-dom'
 
@@ -36,10 +36,20 @@ const Register = () => {
     setInputs((prev) => ({...prev, [e.target.name] : e.target.value}));
   };
 
+  function handleformatkontak (e) {
+    let kontak = input.no_hp
+    let newKontak = []
+    if(kontak[0] === '0'){
+      for (let i = 0 ; i < kontak.length; i++) {
+        if(i==0) continue
+        newKontak.push(kontak[i])
+      }
+      setInputs((prev) => ({...prev, no_hp : newKontak.join('')}))
+    }
+  }
   function timeout(delay) {
     return new Promise( res => setTimeout(res, delay) );
   }
-
   const handleRegister = async (e) => {
     e.preventDefault() // prevent auto refresh
 
@@ -47,7 +57,7 @@ const Register = () => {
       
       await makeRequest.post("/user", input);
       setErr("Register berhasil silahkan login !!")
-      await timeout(1500);
+      await timeout(500);
       navigate("/login");
     }catch(err){
       setErr(err.response.data)
@@ -92,7 +102,7 @@ const Register = () => {
                     </CInputGroupText>
                     <CFormInput
                       type="password"
-                      placeholder="Repeat password"
+                      placeholder="Ulangi Password"
                       autoComplete="new-password"
                       name="confpassword" onChange={handleChange}
                       required
@@ -102,13 +112,32 @@ const Register = () => {
                     <CInputGroupText>
                       <CIcon icon={cilPhone} />
                     </CInputGroupText>
-                    <CFormInput placeholder="Kontak nomor" autoComplete="kontak-nomor" name="no_hp" onChange={handleChange} required/>
+                    <CInputGroupText>
+                      <CIcon icon={cifId}></CIcon>
+                      <span style={{marginLeft:'5px'}}>+62</span>
+                    </CInputGroupText>
+                      <CFormInput 
+                        placeholder="Nomor Kontak" 
+                        type='number' 
+                        autoComplete="kontak-nomor" 
+                        name="no_hp" 
+                        onChange={handleChange} 
+                        onBlur={handleformatkontak} 
+                        value={input.no_hp}
+                        required
+                      />
                   </CInputGroup>
                   <CInputGroup className="mb-3">
                     <CInputGroupText>
                       <CIcon icon={cilBadge} />
                     </CInputGroupText>
-                    <CFormInput placeholder="Kode spesial" autoComplete="code" name="code" onChange={handleChange} required />
+                    <CFormInput 
+                      placeholder="Kode spesial (optional)" 
+                      autoComplete="code" 
+                      name="code" 
+                      onChange={handleChange} 
+                      required 
+                    />
                   </CInputGroup>
 
                   <p className="text-body-secondary">{err && err}</p>

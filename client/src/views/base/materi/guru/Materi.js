@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import ResponsivePagination from 'react-responsive-pagination'
+import ShowMoreText from "react-show-more-text";
 import {
   CButton,
   CCard,
@@ -38,6 +39,7 @@ const Materi = () => {
       setFieldFilter(e.target.value)
     }
     const handleLimit = (e) => {
+      setPage(1)
       setLimit(e.target.value)
     }
 
@@ -75,7 +77,6 @@ const Materi = () => {
     
     //for pagination
     // const handlePage = (num) => setPage(num)
-    
     // const pagesNum = []
     // for (let i = 0; i < materi?.total_pages; i++) {
     //   pagesNum.push(<CPaginationItem onClick={() => handlePage(i+1)} key={i}>{i+1}</CPaginationItem>);
@@ -142,7 +143,19 @@ const Materi = () => {
                             <CTableHeaderCell scope="row">{(index+1)+materi.offset}</CTableHeaderCell>
                             <CTableDataCell>{materiContent.user.name}</CTableDataCell>
                             <CTableDataCell>{materiContent.name}</CTableDataCell>
-                            <CTableDataCell>{materiContent.about}</CTableDataCell>
+                            <CTableDataCell width={'40%'}>
+                              <ShowMoreText
+                                  lines={3}
+                                  more='[Tampilkan Detail]'
+                                  less='[Kecilkan]'
+                                  anchorClass=''
+                                  className=''
+                                  expanded={false}
+                                  truncatedEndingComponent={"..... "}
+                              >
+                                {materiContent.about}
+                              </ShowMoreText>
+                            </CTableDataCell>
                             <CTableDataCell>
                                 <CButton color="primary" className="mb-1 mt-1 px-3 mx-1" onClick={() => handleDetail(materiContent.uuid)}>
                                     <CIcon icon={cilStorage} />
