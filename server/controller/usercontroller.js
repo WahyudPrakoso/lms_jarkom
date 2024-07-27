@@ -144,8 +144,8 @@ const createUser = async (req, res) => {
                 email: email
             }
         })
-        if (isEmailused > 0) return res.status(409).json("Email sudah terdaftar!!")
-            if (password !== confpassword) return res.status(400).json("Password dan Confirm Password tidak cocok");
+        if (isEmailused > 0) return res.status(409).json({msg :"Email sudah terdaftar!!"})
+            if (password !== confpassword) return res.status(400).json({msg : "Password dan Confirm Password tidak cocok"});
         const hashPassword = await argon2.hash(password);
         let verifyEmail = Math.floor(100000 + Math.random() * 900000);
         const role = ["1711","0105"];
@@ -163,10 +163,10 @@ const createUser = async (req, res) => {
             is_verified: false,
             verify_email: verifyEmail
         });
-        res.status(201).json("Akun user berhasil dibuat!" );
+        res.status(201).json({msg :"Akun user berhasil dibuat!"} );
         // res.status(201).json({msg: "Register Berhasil"});
     } catch (error) {
-        res.status(500).json(error.message);
+        res.status(500).json({msg : error.message});
     }
 }
 
@@ -237,10 +237,10 @@ const updateAvatar = async (req, res) => {
             });
             res.status(201).json({ status: "berhasil", newAvatar: newUser.avatar });
         } catch (error) {
-            res.status(400).json(error.message);
+            res.status(400).json({msg : error.message});
         }
     } catch (error) {
-        res.status(500).json(error.message);
+        res.status(500).json({msg : error.message});
     }
 }
 const updateUser = async (req, res) => {
@@ -254,6 +254,12 @@ const updateUser = async (req, res) => {
         if (!user) return res.status(404).json({ msg: "user tidak ditemukan" });
         // return res.json(user)
         const { name, email, password, confpassword, no_hp } = req.body;
+        const isEmailused = await User.count({
+            where: {
+                email: email
+            }
+        })
+        if (isEmailused > 0) return res.status(409).json({msg : "Email sudah terdaftar!!"})
         const numId = '+62';
         let hashPassword;
         if (!password || !confpassword) {
@@ -278,12 +284,12 @@ const updateUser = async (req, res) => {
                     id: user.id
                 }
             });
-            res.status(201).json("Update User Berhasil");
+            res.status(201).json({msg :"Update User Berhasil"});
         } catch (error) {
-            res.status(400).json(error);
+            res.status(400).json({msg :error});
         }
     } catch (error) {
-        res.status(500).json(error.message);
+        res.status(500).json({msg : error.message});
     }
     
 }
@@ -303,12 +309,12 @@ const deleteUser = async (req, res) => {
                     id: user.id
                 }
             });
-            res.status(201).json( "Delete User Berhasil");
+            res.status(201).json( {msg :"Delete User Berhasil"});
         } catch (error) {
-            res.status(400).json( error.message);
+            res.status(400).json({msg : error.message});
         }
     } catch (error) {
-        res.status(500).json(error.message);
+        res.status(500).json({msg : error.message});
     }
 }
 
@@ -357,7 +363,7 @@ const getUser = async (req, res) => {
         return res.status(200).json({pages: page+1, offset: offset, limit: limit, total : response.length, total_pages : totalPage, data : response}) 
 
     } catch (error) {
-       return res.status(500).json(error.message);
+       return res.status(500).json({msg : error.message});
     }
 }
 
@@ -371,7 +377,7 @@ const getUserById = async (req, res) => {
         });
         return res.status(200).json(response);
     } catch (error) {
-        return res.status(500).json(error.message);
+        return res.status(500).json({msg : error.message});
     }
 }
 

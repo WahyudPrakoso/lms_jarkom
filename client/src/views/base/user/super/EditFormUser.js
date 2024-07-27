@@ -3,7 +3,7 @@ import CIcon from '@coreui/icons-react';
 import { CButton, CForm, CFormInput, CFormLabel, CFormTextarea, CInputGroup, CInputGroupText } from '@coreui/react'
 import { useEffect, useState } from 'react'
 
-const EditUserForm = ({onsubmit, initialValue})=>{
+const EditUserForm = ({onsubmit, initialValue, err})=>{
     let kontak = []
     for (let i = 0; i < initialValue.no_hp.length; i++) {
         if (i < 3) continue;
@@ -115,6 +115,7 @@ const EditUserForm = ({onsubmit, initialValue})=>{
                     value={input.code}
                 />
             </CInputGroup>
+            <CFormLabel>{err && err}</CFormLabel>
             <div className="d-grid">
                 <CButton color="primary" onClick={()=>{handleSubmit(input)}}>Edit User</CButton>
             </div>

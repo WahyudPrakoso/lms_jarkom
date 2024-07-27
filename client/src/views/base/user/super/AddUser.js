@@ -20,16 +20,15 @@ import CIcon from '@coreui/icons-react';
 import { cifId, cilBadge, cilLockLocked, cilPhone, cilUser } from '@coreui/icons';
 
 const AddUser = () => {
-    const [deadline, setDeadline] = useState(new Date())
+    const [err, setErr] = useState(null)
     const navigate = useNavigate()
     const [input, setInputs] = useState({
-      name : "",
-      email : "",
-      password : "",
-      confpassword: "",
-      no_hp : "",
-      code : ""
-      
+      name : '',
+      email : '',
+      password : '',
+      confpassword: '',
+      no_hp : '',
+      code : ''
     });
     const handleChange = (e) => {
         setInputs((prev) => ({...prev, [e.target.name] : e.target.value}));
@@ -55,19 +54,29 @@ const AddUser = () => {
           navigate('/admin/user')
         },
         onError:(err) => {
-            console.log(err.response.data.msg)
+            setErr(err.response.data.msg)
         }
     })
     const handleSubmit = async (content) => {
-      createMutation.mutate({...content})
-      setInputs({
-        name : "",
-        email : "",
-        password : "",
-        confpassword: "",
-        no_hp : "",
-        code : ""
-      })
+      let pass = false
+      if(input.name=='') {setErr("Nama tidak boleh kosong !!")}
+      else if(input.email=='') {setErr("Email tidak boleh kosong !!")}
+      else if(input.password=='') {setErr("Password tidak boleh kosong !!")}
+      else if(input.confpassword=='') {setErr("Confirm Password tidak boleh kosong !!")}
+      else if(input.no_hp=='') {setErr("Kontak tidak boleh kosong !!")}
+      else {pass = true}
+      if(pass){
+        createMutation.mutate({...content})
+        setInputs({
+          name : "",
+          email : "",
+          password : "",
+          confpassword: "",
+          no_hp : "",
+          code : ""
+        })
+        
+      }
     };
 
   return (
@@ -84,11 +93,11 @@ const AddUser = () => {
                   <CInputGroupText>
                     <CIcon icon={cilUser} />
                   </CInputGroupText>
-                  <CFormInput placeholder="Nama Lengkap" autoComplete="name" name="name" onChange={handleChange} required />
+                  <CFormInput placeholder="Nama Lengkap" autoComplete="name" name="name" value={input.name} onChange={handleChange} required />
                 </CInputGroup>
                 <CInputGroup className="mb-3">
                   <CInputGroupText>@</CInputGroupText>
-                  <CFormInput type="email" placeholder="Email" autoComplete="email" name="email" onChange={handleChange} required/>
+                  <CFormInput type="email" placeholder="Email" autoComplete="email" name="email" value={input.email} onChange={handleChange} required/>
                 </CInputGroup>
                 <CInputGroup className="mb-3">
                    <CInputGroupText>
@@ -100,6 +109,7 @@ const AddUser = () => {
                     autoComplete="new-password"
                     name="password" onChange={handleChange}
                     required
+                    value={input.password}
                   />
                 </CInputGroup>
                 <CInputGroup className="mb-4">
@@ -112,6 +122,7 @@ const AddUser = () => {
                     autoComplete="new-password"
                     name="confpassword" onChange={handleChange}
                     required
+                    value={input.confpassword}
                   />
                 </CInputGroup>
                 <CInputGroup className="mb-3">
@@ -143,10 +154,12 @@ const AddUser = () => {
                     name="code" 
                     onChange={handleChange} 
                     required 
+                    value={input.code}
                   />
                 </CInputGroup>
+                <CFormLabel>{err && err}</CFormLabel>
                   <div className="d-grid">
-                      <CButton color="primary" onClick={()=>{handleSubmit(input,deadline)}}>Buat User</CButton>
+                      <CButton color="primary" onClick={()=>{handleSubmit(input)}}>Buat User</CButton>
                   </div>
               </CForm>
           </CCardBody>

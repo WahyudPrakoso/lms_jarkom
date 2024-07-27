@@ -27,11 +27,29 @@ const EditUser = () => {
           navigate('/admin/user')
         },
         onError:(err) => {
-            console.log(err.response.data.msg)
+          setErr(err.response.data.msg)
         }
     })
     const handleSubmit = async (updatedUser) => {
+      let pass = false
+      if(updatedUser.name=='') {setErr("Nama tidak boleh kosong !!")}
+      else if(updatedUser.email=='') {setErr("Email tidak boleh kosong !!")}
+      else if(updatedUser.password=='') {setErr("Password tidak boleh kosong !!")}
+      else if(updatedUser.confpassword=='') {setErr("Confirm Password tidak boleh kosong !!")}
+      else if(updatedUser.no_hp=='') {setErr("Kontak tidak boleh kosong !!")}
+      else {pass = true}
+      if(pass){
         updateUserMutation.mutate({ id, ...updatedUser})
+        setInputs({
+          name : "",
+          email : "",
+          password : "",
+          confpassword: "",
+          no_hp : "",
+          code : ""
+        })
+        
+      }
     };
   return (
     <CRow>
@@ -46,7 +64,7 @@ const EditUser = () => {
             ) : isError ? (
               <div>Error: {error.message}</div>
             ) : (
-              <EditUserForm onsubmit={handleSubmit} initialValue={user} />     
+              <EditUserForm onsubmit={handleSubmit} initialValue={user} err={err} />     
           )}
           {isFetching ? <span> Loading...</span> : null}{' '}
           </CCardBody>
